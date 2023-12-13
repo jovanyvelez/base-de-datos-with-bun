@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id         String              @id @default(uuid())
+  name       String
+  created_at DateTime            @default(now())
+  updated_at DateTime
+  hijo       categoriasclosure[] @relation("hijos")
+  padre      categoriasclosure[] @relation("padres")
+  root       categoriasclosure[] @relation("roots")
+  productos  productos[]
+  imagenes    image[]
+}
+
+model categoriasclosure {
+  id               String     @id @default(uuid())
+  root             String
+  padre            String
+  hijo             String
+  depth            Int
+  categorias_hijo  categorias @relation("hijos", fields: [hijo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categorias_padre categorias @relation("padres", fields: [padre], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categorias_root  categorias @relation("roots", fields: [root], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model productos {
+  id           String     @id @default(uuid())
+  name         String
+  active       Boolean
+  categoria_id String
+  codigo       String     @unique
+  created_at   DateTime   @default(now())
+  description  String
+  ean_code     String?    @unique
+  marca        String
+  new          Boolean
+  promo        Boolean
+  quantity     Float
+  tax          Float      @default(0.0)
+  updated_at   DateTime
+  images       image[]
+  prices       price[]
+  categoria    categorias @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model image {
+  id         String            @id @default(uuid())
+  public_id  String
+  secure_url String
+  created_at DateTime          @default(now())
+  updated_at DateTime
+  product_id String?
+  categoria_id String?
+  name       opciones_producto @default(main)
+  product    productos?         @relation(fields: [product_id], references: [id])
+  categoria  categorias?        @relation(fields: [categoria_id], references: [id])
+  @@unique([product_id, name], map: "asignacion_imagen")
+}
+
+model price {
+  id         String            @id @default(uuid())
+  price      Float
+  created_at DateTime          @default(now())
+  updated_at DateTime
+  product_id String
+  name       opciones_producto @default(main)
+  product    productos         @relation(fields: [product_id], references: [id])
+
+  @@unique([product_id, name], map: "asignacion_precio")
+}
+
+model ciudades {
+  id             String        @id @default(uuid())
+  ciudad         String
+  codigo         String
+  departamento_id String
+  departamentos  departamentos @relation(fields: [departamento_id], references: [id])
+}
+
+model departamentos {
+  id           String     @id @default(uuid())
+  departamento String
+  codigo       String
+  ciudades     ciudades[]
+}
+
+model user {
+  id           String         @id @unique
+  email        String
+  key          user_key[]
+  auth_session user_session[]
+}
+
+model user_session {
+  id             String @id @unique
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  user           user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model user_key {
+  id              String  @id @unique
+  hashed_password String?
+  user_id         String
+  user            user    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+enum opciones_producto {
+  main
+  uno
+  dos
+  tres
+  cuatro
+  cinco
+}
