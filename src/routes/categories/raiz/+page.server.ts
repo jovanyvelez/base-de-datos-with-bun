@@ -10,8 +10,8 @@ export const load = async() => {
 	return {
  		
         /*root: categoriasRaices(),*/
-        form: superValidate(categorySchema),
-        test: categoriasPrincipales()//productosPorCategoria("f48358e3-6550-4b46-bd9d-5b93fc41adde")
+        form: await superValidate(categorySchema),
+        test: await categoriasPrincipales()//productosPorCategoria("f48358e3-6550-4b46-bd9d-5b93fc41adde")
 	};
 };
 
