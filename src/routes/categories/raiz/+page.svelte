@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-	export let data: PageData;
+	
+	export let data
+	const { test } = data;
 </script>
 
 <h1>Bienvenido</h1>
@@ -10,15 +10,17 @@
 	{#await data.test}
 		Loading...
 	{:then value}
-		<div class="bg">
-			{#each value as val (val.product_id)}
-				<div>
-					<ul>
-						<li>{val.name}</li>
-						<img src={val.secure_url} alt="" />
-					</ul>
-					<h6>{val.categoria}</h6>
-				</div>
+		<div class="">
+			{#each value as val (val.categoria_id)}
+
+				<ul>
+					<li><p>{val.categoria_name}</p>
+						<pre>{JSON.stringify(val.productos,null,2)}</pre>
+					</li>
+
+				</ul>
+	
+
 			{/each}
 		</div>
 	{:catch error}
@@ -30,17 +32,17 @@
 
 <style>
 	
-	h6,a,h1 {
+	a,h1 {
 		text-align: center;
 	}
-	.bg {
+	/*.bg {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
 		align-items: center;
 		margin-right: 5px;
 		padding: 5px;
-	}
+	}*/
 
 	a{
 		display:block;

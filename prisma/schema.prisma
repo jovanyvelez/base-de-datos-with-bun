@@ -10,6 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Aquí va todo lo relacionado con categorias, productos, imagenes y precion
+
 model categorias {
   id         String              @id @default(uuid())
   name       String
@@ -79,6 +81,37 @@ model price {
   @@unique([product_id, name], map: "asignacion_precio")
 }
 
+model usuario {
+  id                      String              @id @default(uuid())
+  role_id                 roles               @default(cliente)
+  name                    String
+  phone                   String
+  email                   String              @unique
+  doc_type                tipo_documento  
+  num_doc                 String              @unique
+  departament             String
+  city                    String
+  address                 String
+  bussiness_unit          String?
+  zone_id                 Int?
+  asesor                  String?
+  discount                Float?              @default(0)
+  datos_asesor            usuario?            @relation("vendedor_cliente", fields: [asesor], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clientes_asesor         usuario[]           @relation("vendedor_cliente")
+  created_at              DateTime            @default(now())
+  updated_at              DateTime
+  zonas                   zonas?               @relation(fields: [zone_id], references: [id])
+  //orden_de_pedido   OrdenDePedido[]
+}
+
+model zonas {
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  zone                 String                 @unique
+  usuario              usuario[]
+}
+
+// Ciudadese y departamentos de Colombia
 model ciudades {
   id             String        @id @default(uuid())
   ciudad         String
@@ -94,6 +127,8 @@ model departamentos {
   ciudades     ciudades[]
 }
 
+
+//Autenticación de usuario
 model user {
   id           String         @id @unique
   email        String
@@ -120,6 +155,8 @@ model user_key {
   @@index([user_id])
 }
 
+
+// tipos de datos
 enum opciones_producto {
   main
   uno
@@ -127,4 +164,17 @@ enum opciones_producto {
   tres
   cuatro
   cinco
+}
+
+enum roles {
+  admin
+  asesor
+  cliente
+  operador
+}
+
+enum tipo_documento {
+  cedula
+  nit
+  pasaporte
 }

@@ -1,16 +1,13 @@
-import { redirect } from '@sveltejs/kit';
+import { productosAleatorios } from "$lib/server/db_queries/query_select";
 
-export const load = async ({locals}) => {
-	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/login');
+
+
+export const load = async () => {
+
 
 	return {
-		one: "a",
-		two: 2,
-		streamed: {
-			three: 3
-		},
-		userId: session.user.userId,
-		username: session.user.email
+
+		datos: await productosAleatorios()
+	
 	};
 };
