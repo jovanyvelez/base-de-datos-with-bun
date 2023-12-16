@@ -8,9 +8,9 @@
 
 {#if data.usertype === 'cliente' || data.usertype === null || data.usertype === undefined}
 	<MenuClient categorias={data.categorias} usuario={data.usuario} />
-	<nav class="my-6 sm:my-4 flex flex-col sm:flex-row justify-evenly items-center text-blue-800 font-extrabold ">
+	<nav class="my-4 flex flex-col sm:flex-row justify-evenly items-center text-blue-800 font-extrabold ">
 		{#each data.categorias as categoria (categoria.id) }
-			<a href="/tienda/{categoria.id}"><span>{categoria.name}</span></a>
+			<a href="/tienda/{categoria.id}" class="py-2"><span>{categoria.name} </span></a>
 			
 		{/each}
 
