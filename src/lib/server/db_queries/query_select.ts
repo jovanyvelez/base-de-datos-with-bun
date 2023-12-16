@@ -109,7 +109,8 @@ FROM (
     SELECT
         categorias.id as categoria_id,
         categorias.name as categoria_name,
-        productos.id as product_id,
+        productos.id,
+		productos.codigo  as product_id,
         productos.name,
         price.name as price_type,
         price.price,

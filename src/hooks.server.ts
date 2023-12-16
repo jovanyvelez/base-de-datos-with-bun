@@ -1,6 +1,5 @@
 import { buscarUsuario } from '$lib/server/db_queries/query_select';
 import { auth } from '$lib/server/lucia';
-import type { appuser } from '$lib/server/types/interfaces';
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
