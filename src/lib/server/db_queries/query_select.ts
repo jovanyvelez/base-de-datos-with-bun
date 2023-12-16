@@ -1,5 +1,16 @@
 import prisma from '../prisma';
 
+export type ProductCard = {
+    id:          string;
+    name:        string;
+    codigo:      string;
+    quantity:    number;
+    description: string;
+    price_type:  string;
+    price:       number;
+    image_type:  string;
+    secure_url:  string;
+}
 
 
 interface OriginalItem {
@@ -42,8 +53,16 @@ export async function buscarUsuario(email: string) {
 
 
 export async function productosPorCategoria(categoriaConsulta: string) {
-	const productos = await prisma.$queryRaw`
-	SELECT productos.id, productos.name, price.name as price_type, price.price, image.name as image_type, image.secure_url
+	const productos : ProductCard[] = await prisma.$queryRaw`
+	SELECT productos.id, 
+    	productos.name,
+		productos.codigo,
+		productos.quantity,
+		productos.description,
+		price.name as price_type, 
+		price.price, 
+		image.name as image_type, 
+		image.secure_url
 	FROM productos
 	JOIN price ON productos.id = price.product_id
 	JOIN image on productos.id = image.product_id
@@ -55,11 +74,11 @@ export async function productosPorCategoria(categoriaConsulta: string) {
 				categoriasclosure.padre = ${categoriaConsulta} or 
 				categoriasclosure.hijo = ${categoriaConsulta})
 	)
-	ORDER BY random()
-	LIMIT 4
+
 `;
+	const cantidad = productos.length;
 	prisma.$disconnect();
-	return productos;
+	return {productos, cantidad};
 }
 
 
