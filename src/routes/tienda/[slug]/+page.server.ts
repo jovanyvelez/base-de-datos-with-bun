@@ -3,6 +3,7 @@ import { productosPorCategoria } from '$lib/server/db_queries/query_select.js';
 
 export async function load({ params }) {
 	
+	console.time("tienda")
 	type mQuery = {
 		param: string;
 		page: number;
@@ -22,5 +23,6 @@ export async function load({ params }) {
 
 	const {productos, cantidad } =  await productosPorCategoria(query.param);
 
+	console.timeEnd("tienda")
 	return { productos,cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
 }

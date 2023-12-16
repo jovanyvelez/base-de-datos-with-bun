@@ -25,8 +25,8 @@
 
 	<div class="md:flex ">
 		<ul class="menu menu-horizontal px-1 text-xs md:text-sm lg:text-xl">
-			<li class="hidden md:block"><a href="/" data-sveltekit-preload-data>INICIO</a></li>
-			<li>
+			<li class="hidden md:block"><a href="/">INICIO</a></li>
+			<!--li>
 				<details>
 					<summary class="mr-9 md:mx-0"> <span class="font-bold">IR A TIENDA</span></summary>
 					<ul class="p-2 bg-base-100 z-50">
@@ -35,7 +35,7 @@
 						{/each}
 					</ul>
 				</details>
-			</li>
+			</li-->
 			{#if usuario !== null}
 				<li><a href="/logout" data-sveltekit-reload>CERRAR SESION</a></li>
 			{/if}
