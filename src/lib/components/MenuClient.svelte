@@ -25,7 +25,7 @@
 
 	<div class="md:flex ">
 		<ul class="menu menu-horizontal px-1 text-xs md:text-sm lg:text-xl">
-			<li class="hidden md:block"><a href="/">INICIO</a></li>
+			<li class=""><a href="/">INICIO</a></li>
 			<!--li>
 				<details>
 					<summary class="mr-9 md:mx-0"> <span class="font-bold">IR A TIENDA</span></summary>
@@ -47,6 +47,7 @@
 			<a href="/carrito">
 				<img src="https://res.cloudinary.com/dqlbbx7ud/image/upload/v1695398056/tienda/Carrito_sk1brn.svg" alt="Carrito" />
 			</a>
+			
 			<div class="relative flex">
 				{#key items}
 					<span>{items}</span>
