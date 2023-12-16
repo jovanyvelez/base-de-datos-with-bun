@@ -31,7 +31,7 @@
 					<summary class="mr-9 md:mx-0"> <span class="font-bold">IR A TIENDA</span></summary>
 					<ul class="p-2 bg-base-100 z-50">
 						{#each categorias as categoria}
-							<li class="text-base"><a href="/tienda/{categoria.id}">{categoria.name}</a></li>
+							<li class="text-base"><a href="/tienda/{categoria.id}" data-sveltekit-reload>{categoria.name}</a></li>
 						{/each}
 					</ul>
 				</details>
