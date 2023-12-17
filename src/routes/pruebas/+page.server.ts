@@ -2,7 +2,7 @@ import { consultaPrueba, productosPorCategoria } from "$lib/server/db_queries/qu
 
 export const load = async ()=>{
     console.time('quer');
-    const productos = await consultaPrueba('d1eefb93-05f4-45f0-b72b-47ad6a256c0b')
+    const productos = await productosPorCategoria('c7ffb770-539a-4f43-ba20-7ff2a3c4bc7b')
 
     console.timeEnd('quer');
     return {

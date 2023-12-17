@@ -10,18 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//Aquí va todo lo relacionado con categorias, productos, imagenes y precion
+//Aquí va todo lo relacionado con categorias, productos, imagenes y precios
 
 model categorias {
-  id         String              @id @default(uuid())
-  name       String
-  created_at DateTime            @default(now())
-  updated_at DateTime
-  hijo       categoriasclosure[] @relation("hijos")
-  padre      categoriasclosure[] @relation("padres")
-  root       categoriasclosure[] @relation("roots")
-  productos  productos[]
-  imagenes    image[]
+  id                  String                    @id @default(uuid())
+  name                String
+  parent_id           String?
+  created_at          DateTime                  @default(now())
+  updated_at          DateTime
+  papa                categorias?              @relation("hijoapadre", fields: [parent_id], references: [id])
+  hijos               categorias[]             @relation("hijoapadre")
+
+  //Productos e imagenes
+  productos           productos_categorias[]
+  imagenes            image[]
+
+  // Tabla uno a muchos  
+  hijo                categoriasclosure[] @relation("hijos")
+  padre               categoriasclosure[] @relation("padres")
+  root                categoriasclosure[] @relation("roots")
+
 }
 
 model categoriasclosure {
@@ -52,7 +60,17 @@ model productos {
   updated_at   DateTime
   images       image[]
   prices       price[]
-  categoria    categorias @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categorias   productos_categorias[]
+}
+
+
+model productos_categorias {
+  id          String     @id @default(uuid())
+  product_id  String
+  category_id String
+  product     productos  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category    categorias @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  @@unique([product_id, category_id], map: "asignacion_categorias")
 }
 
 model image {
@@ -77,7 +95,6 @@ model price {
   product_id String
   name       opciones_producto @default(main)
   product    productos         @relation(fields: [product_id], references: [id])
-
   @@unique([product_id, name], map: "asignacion_precio")
 }
 

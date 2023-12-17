@@ -7,6 +7,9 @@
 
 </script>
 
+<h1>
+    {data.productos.cantidad}
+</h1>
 
 <pre>{JSON.stringify(productos,null,2)}</pre>
 

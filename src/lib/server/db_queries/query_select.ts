@@ -63,7 +63,7 @@ export const consultaPrueba = async (categoria: string) => {
 		}
 	});
 	console.timeEnd('query');
-	return productos
+	return productos;
 };
 
 /**
@@ -85,7 +85,7 @@ export async function buscarUsuario(email: string) {
 	return usuario;
 }
 
-export async function productosPorCategoria(categoriaConsulta: string) {
+export async function productosPorCategoria1(categoriaConsulta: string) {
 	console.time('query');
 	const productos: ProductCard[] = await prisma.$queryRaw`
 	SELECT productos.id, 
@@ -115,7 +115,33 @@ export async function productosPorCategoria(categoriaConsulta: string) {
 	return { productos, cantidad };
 }
 
-export async function mainCategories() {
+export async function productosPorCategoria(categoriaConsulta: string) {
+	const productos: ProductCard[] = await prisma.$queryRaw`
+	SELECT productos.id, 
+    	productos.name,
+		productos.codigo,
+		productos.quantity,
+		productos.description,
+		price.name as price_type, 
+		price.price, 
+		image.name as image_type, 
+		image.secure_url
+	FROM productos
+	JOIN price ON productos.id = price.product_id
+	JOIN image on productos.id = image.product_id
+	JOIN productos_categorias ON productos.id = productos_categorias.product_id
+	WHERE productos_categorias.category_id = ${categoriaConsulta}
+`;
+
+	console.time('query');
+
+	const cantidad = productos.length;
+	console.timeEnd('query');
+	await prisma.$disconnect();
+	return { productos, cantidad };
+}
+
+export async function mainCategories1() {
 	const categorias: { id: string; name: string }[] = await prisma.$queryRaw`
 		SELECT categorias.id as id, categorias.name as name
 		FROM categoriasclosure
@@ -123,6 +149,20 @@ export async function mainCategories() {
 		WHERE (categoriasclosure.root = categoriasclosure.padre and 
 				categoriasclosure.padre = categoriasclosure.hijo )
 	`;
+
+	return categorias;
+}
+
+export async function mainCategories() {
+	const categorias: { id: string; name: string }[] = await prisma.categorias.findMany({
+		where: {
+			parent_id: null
+		},
+		select: {
+			id: true,
+			name: true
+		}
+	});
 
 	return categorias;
 }
