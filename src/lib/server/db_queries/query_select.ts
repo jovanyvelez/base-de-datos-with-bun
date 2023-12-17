@@ -116,6 +116,8 @@ export async function productosPorCategoria1(categoriaConsulta: string) {
 }
 
 export async function productosPorCategoria(categoriaConsulta: string) {
+
+
 	const productos: ProductCard[] = await prisma.$queryRaw`
 	SELECT productos.id, 
     	productos.name,
@@ -133,10 +135,8 @@ export async function productosPorCategoria(categoriaConsulta: string) {
 	WHERE productos_categorias.category_id = ${categoriaConsulta}
 `;
 
-	console.time('query');
 
 	const cantidad = productos.length;
-	console.timeEnd('query');
 	await prisma.$disconnect();
 	return { productos, cantidad };
 }
@@ -225,6 +225,79 @@ WHERE row_num <= 4
 
 	const resultadoObjeto = organizarProductosPorCategoria(productos);
 
+	return resultadoObjeto;
+}
+
+export async function productosAleatorios1() {
+	console.time('query');
+	const productos: OriginalItem[] = await prisma.$queryRaw`
+	SELECT *
+FROM (
+    SELECT
+        categorias.id as categoria_id,
+        categorias.name as categoria_name,
+        productos.id,
+		productos.codigo  as product_id,
+        productos.name,
+        price.name as price_type,
+        price.price,
+        image.name as image_type,
+        image.secure_url,
+        ROW_NUMBER() OVER (PARTITION BY categorias.id ORDER BY random()) as row_num
+    FROM productos
+    JOIN price ON productos.id = price.product_id
+    JOIN image ON productos.id = image.product_id
+    JOIN categorias ON productos."categoria_id" = categorias.id
+    WHERE productos."categoria_id" IN (
+        SELECT categorias.id
+        FROM categoriasclosure
+        JOIN categorias ON categoriasclosure.hijo = categorias.id
+        WHERE (categoriasclosure.root = categoriasclosure.padre and 
+                categoriasclosure.padre = categoriasclosure.hijo)
+        ORDER BY random()
+    )
+) AS subquery
+WHERE row_num <= 4
+
+`;
+
+	const resultadoObjeto = organizarProductosPorCategoria(productos);
+	console.timeEnd('query');
+	return resultadoObjeto;
+}
+
+export async function productosAleatorios2() {
+	console.time('query');
+	const productos: OriginalItem[] = await prisma.$queryRaw`
+	WITH RECURSIVE CategoriaHierarchy AS (
+  SELECT id
+  FROM categorias
+  WHERE parent_id IS NULL -- Seleccionar las categorías raíz
+
+  UNION ALL
+
+  SELECT c.id
+  FROM categorias c
+  INNER JOIN CategoriaHierarchy ch ON c.parent_id = ch.id
+),
+ProductosCategoriaRanked AS (
+  SELECT
+    p.*,
+    ROW_NUMBER() OVER(PARTITION BY c.id ORDER BY p.id) AS row_num
+  FROM productos p
+  JOIN productos_categorias pc ON p.id = pc.product_id
+  JOIN categorias c ON pc.category_id = c.id
+  WHERE c.id IN (SELECT id FROM CategoriaHierarchy)
+)
+SELECT *
+FROM ProductosCategoriaRanked
+WHERE row_num <= 4;
+
+
+`;
+
+	const resultadoObjeto = organizarProductosPorCategoria(productos);
+	console.timeEnd('query');
 	return resultadoObjeto;
 }
 
