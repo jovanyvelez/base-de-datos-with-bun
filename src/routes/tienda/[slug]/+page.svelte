@@ -130,3 +130,4 @@
 	}
 </style>
 
+<pre>{JSON.stringify(data.productos,null,2)}</pre>

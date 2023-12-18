@@ -119,11 +119,14 @@ export async function productosPorCategoria(categoriaConsulta: string, pageSize:
 
 
 	const productos: ProductCard[] = await prisma.$queryRaw`
-	SELECT productos.id, 
+	SELECT 
+		productos.id, 
     	productos.name,
-		productos.codigo,
 		productos.quantity,
 		productos.description,
+		productos.codigo,
+		productos.ean_code,
+		productos.tax,
 		price.name as price_type, 
 		price.price, 
 		image.name as image_type, 
@@ -183,7 +186,7 @@ export async function mainCategories() {
 }
 
 export async function categoriasPrincipales() {
-	console.time('query');
+
 	const productos = await prisma.$queryRaw`
 	SELECT categorias.name as categoria, categorias.id , productos.id as product_id, productos.name, price.name as price_type, price.price, image.name as image_type, image.secure_url
 	FROM productos
@@ -201,7 +204,6 @@ export async function categoriasPrincipales() {
 	LIMIT 4
 `;
 	console.log('categorias ppales');
-	console.timeEnd('query');
 	prisma.$disconnect();
 	return productos;
 }
