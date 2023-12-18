@@ -115,7 +115,7 @@ export async function productosPorCategoria1(categoriaConsulta: string) {
 	return { productos, cantidad };
 }
 
-export async function productosPorCategoria(categoriaConsulta: string) {
+export async function productosPorCategoria(categoriaConsulta: string, pageSize:number, queryPage:number) {
 
 
 	const productos: ProductCard[] = await prisma.$queryRaw`
@@ -133,11 +133,26 @@ export async function productosPorCategoria(categoriaConsulta: string) {
 	JOIN image on productos.id = image.product_id
 	JOIN productos_categorias ON productos.id = productos_categorias.product_id
 	WHERE productos_categorias.category_id = ${categoriaConsulta}
+	LIMIT ${pageSize} OFFSET ${pageSize * (queryPage -1) }
 `;
 
 
-	const cantidad = productos.length;
+const total= await prisma.$queryRaw`
+	SELECT COUNT(*)
+FROM (
+    SELECT productos.id
+    FROM productos
+    JOIN price ON productos.id = price.product_id
+    JOIN image ON productos.id = image.product_id
+    JOIN productos_categorias ON productos.id = productos_categorias.product_id
+    WHERE productos_categorias.category_id = ${categoriaConsulta}
+) AS selected_products;
+`;
+
+	const cantidad = Number(total[0]['count']);
+
 	await prisma.$disconnect();
+
 	return { productos, cantidad };
 }
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	import Item from '$lib/components/Item.svelte';
+	import { h3 } from 'lucia/middleware';
 
 
 	export let data;
@@ -21,11 +22,8 @@
 
 
 
-	$: if (paginacion) {
-		datos = data.productos;
-	} else {
-		datos = products;
-	}
+	$: if (paginacion) datos = data.productos;
+	
 
 	$: if (data.pages) {
 		pags = [...Array(data.pages).keys()];
@@ -108,6 +106,10 @@
 			</a>
 		{/each}
 	</div>
+
+{:else}
+	<h3>{data.pages}</h3>
+	<h1 class="text-xl sm:text-7xl">Ups, no hay paginacion</h1>
 {/if}
 
 

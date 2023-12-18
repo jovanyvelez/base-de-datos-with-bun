@@ -21,8 +21,8 @@ export async function load({ params }) {
 	//pasada en el parámetro
 	
 	
-	const {productos, cantidad } =  await productosPorCategoria(query.param);
+	const {productos, cantidad } =  await productosPorCategoria(query.param, pageSize, query.page);
 
 
-	return { productos,cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
+	return { productos, cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
 }
