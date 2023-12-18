@@ -137,7 +137,7 @@ export async function productosPorCategoria(categoriaConsulta: string, pageSize:
 `;
 
 
-const total= await prisma.$queryRaw`
+const total: {count: bigint}[]= await prisma.$queryRaw`
 	SELECT COUNT(*)
 FROM (
     SELECT productos.id
