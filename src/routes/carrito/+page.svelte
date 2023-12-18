@@ -135,5 +135,3 @@
 {/if}
 
 
-<pre>{JSON.stringify($cart,null,2)}</pre>
-

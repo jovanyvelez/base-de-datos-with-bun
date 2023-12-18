@@ -107,9 +107,7 @@
 		{/each}
 	</div>
 
-{:else}
-	<h3>{data.pages}</h3>
-	<h1 class="text-xl sm:text-7xl">Ups, no hay paginacion</h1>
+
 {/if}
 
 
@@ -129,5 +127,3 @@
 		color: red;
 	}
 </style>
-
-<pre>{JSON.stringify(data.productos,null,2)}</pre>
