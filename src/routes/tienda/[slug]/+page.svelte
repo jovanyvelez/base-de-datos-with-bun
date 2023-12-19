@@ -22,7 +22,7 @@
 
 
 
-	$: if (paginacion) datos = data.productos;
+	$: if (paginacion) datos = data.products;
 	
 
 	$: if (data.pages) {
@@ -67,7 +67,7 @@
 <!--Muestra los productos a comprar-->
 {#if data.cantidad> 0}
 	<div class="flex flex-wrap justify-center">
-		{#each data.productos as product (product.id)}
+		{#each data.products as product (product.id)}
 			<Item {product}  />
 		{/each}
 	</div>

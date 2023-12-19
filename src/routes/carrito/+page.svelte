@@ -30,16 +30,16 @@
 	$: $cart,
 		(resum = {
 			total: $cart.reduce(
-				(a, c) => a + c.qtyBuy * c.price * (1 - discount / 100)*(1+c.tax/100),
+				(a, c) => a + c.qtyBuy * c.prices[0].price * (1 - discount / 100)*(1+c.tax/100),
 				0
 			),
 			items: $cart.reduce((a, c) => a + c.qtyBuy, 0),
 			iva: $cart.reduce(
-				(a, c) => a + c.qtyBuy * c.price *(1 - discount / 100)*(c.tax/100),
+				(a, c) => a + c.qtyBuy * c.prices[0].price *(1 - discount / 100)*(c.tax/100),
 				0
 			),
 			subtotal: $cart.reduce(
-				(a, c) => a + c.qtyBuy * c.price * (1 - discount / 100),
+				(a, c) => a + c.qtyBuy * c.prices[0].price * (1 - discount / 100),
 				0
 			),
 		});
@@ -71,7 +71,7 @@
 	{#each $cart as product (product.id)}
 		<div class="divider sm:col-span-6 mx-10"></div>
 		<div class="flex flex-col items-center justify-center">
-			<img src={product.secure_url} alt="product" class="w-20 mb-2 mx-3" />
+			<img src={product.images[0].secure_url} alt="product" class="w-20 mb-2 mx-3" />
 			<div class="flex">
 				<button on:click={() => outOfCart(product.id)}>
 					<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 72 72"><g transform="translate(72 0) scale(-1 1)"><path fill="#D0CFCE" d="M15.076 12.068v5.951h35.745l.644-5.951zm6.833 42.621l.5 5.282h21.518l.592-5.282z"/><path fill="#9B9B9A" d="M42.096 60.178h7.323l.515-5.731h-7.238zm14.433-47.89h-7.59l-.628 5.613h8.218z"/><g fill="none" stroke="#000" stroke-miterlimit="10"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21.38 50.393l-3.607-28.381m36.49-.029l-3.757 28.395m-9.93-28.289l8.173 10.02M30.417 22.13l17.152 20.642M22.352 24.253l21.864 26.172M23.902 36.996L35.928 50.63m-10.611-1.234l1.363 1.357m-3.452-19.519l8.585-9.131M24.61 41.882L42.853 22.13m-15.968 28.5l22.497-23.915M36.574 50.63l11.543-11.946m-3.901 12.069l2.127-1.793M14.905 12.028H56.95v5.946H14.905z"/><path d="M42.853 54.404h7.271"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m50.124 54.404l-.708 5.562H22.43l-.681-5.562h28.375"/></g></g></svg>
@@ -80,19 +80,19 @@
 			</div>
 		</div>
 		<div class="flex justify-center items-center">
-			{(product.price).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
+			{(product.prices[0].price).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
 		</div>
 		<div class="flex justify-center items-center">
-			{(product.price*(discount/100)).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
+			{(product.prices[0].price*(discount/100)).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
 		</div>
 		<div class="flex justify-center items-center">
-			{(product.price*(1-discount/100)*(product.tax/100)).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
+			{(product.prices[0].price*(1-discount/100)*(product.tax/100)).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
 		</div>
 		<div class="flex flex-col justify-center items-center">
 			<ButonQuantity {product} />
 		</div>
 		<div class="flex justify-center items-center">
-			{(product.price*(1-discount/100)*(1+product.tax/100)*product.qtyBuy).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
+			{(product.prices[0].price*(1-discount/100)*(1+product.tax/100)*product.qtyBuy).toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}
 		</div>
 		<div class="divider  mx-10  sm:col-span-6"></div>
 	{/each}

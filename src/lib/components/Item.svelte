@@ -10,14 +10,14 @@
 			{product.quantity <= 0?'opacity-50':''}">
 
 	
-	<img src={product.secure_url} alt="article" class="w-45" />
+	<img src={product.images[0].secure_url} alt="article" class="w-45" />
 
 	<div>
 		<small><span class="font-bold">code:</span> {product.codigo}</small>
 		<p class="mx-2 text-sm font-bold">{product.name}</p>
 		<p class="text-slate-700">
 			<strong
-				>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}</strong
+				>{product.prices[0].price.toLocaleString('es-ES', { style: 'currency', currency: 'COP' })}</strong
 			>
 		</p>
 		<!--p><small class=''>{product.description}</small></p-->

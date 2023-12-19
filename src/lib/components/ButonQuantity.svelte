@@ -14,7 +14,7 @@
 	let show = true;
 	let disabled = false; //para habilitar o desabilitar el boton '+' del componente
 	
-	$: cost = quantity * product.price;
+	$: cost = quantity * product.prices[0].price;
 
 	const addToCart = (product: ProductStore) => {
 		if(product.quantity === 0)return;

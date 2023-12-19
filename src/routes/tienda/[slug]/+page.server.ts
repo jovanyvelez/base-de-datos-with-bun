@@ -1,5 +1,5 @@
 
-import { productosPorCategoria } from '$lib/server/db_queries/query_select.js';
+import { test1 } from '$lib/server/db_queries/query_select.js';
 
 export async function load({ params }) {
 	
@@ -21,8 +21,9 @@ export async function load({ params }) {
 	//pasada en el parámetro
 	
 	
-	const {productos, cantidad } =  await productosPorCategoria(query.param, pageSize, query.page);
+	const {products, cantidad } =  await test1(query.param, pageSize, query.page);
 
 
-	return { productos, cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
+
+	return { products, cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
 }

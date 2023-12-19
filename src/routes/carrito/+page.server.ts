@@ -15,7 +15,7 @@ export const actions = {
 		const usuario = await buscarFullUsuario(session.user.username)
 		const data = await request.formData();
 		const carrito = JSON.parse(data.get("carrito") as string)
-		//const idOrder = await saveOrder(carrito, usuario)
+		const idOrder = await saveOrder(carrito, usuario)
 		return { success: true, savedorder: idOrder };
 
 	},
