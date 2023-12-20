@@ -6,23 +6,28 @@ export async function load({ params }) {
 	type mQuery = {
 		param: string;
 		page: number;
+		por_categoria: boolean
 	};
 
 	let query: mQuery;
+
 	try {
 		query = JSON.parse(params.slug);
 	} catch (error) {
-		query = { param: params.slug, page: 1 };
+		console.log('error parseando el json');
+		query = { param: '', page: 1, por_categoria: false };
 	}
+
+	console.log(query);
+
 
 	const pageSize = 12;
 
 	//consultamos todas las categorias hijas y descendientes de la categoria
 	//pasada en el parámetro
 	let productos
-	if(query.page < 1) 
+	if(!query.por_categoria)
 	{
-		query.page = 1;
 		productos = await products_by_name_query(query.param, pageSize, query.page);
 
 	}else{

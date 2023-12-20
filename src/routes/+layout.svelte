@@ -4,6 +4,7 @@
 	import MenuAdmin from '$lib/components/MenuAdmin.svelte';
 	import Adminbarebone from '$lib/components/Adminbarebone.svelte';
 	import SearchBox from '$lib/components/SearchBox.svelte';
+	import { stringify } from 'postcss';
 	export let data;
 </script>
 
@@ -12,7 +13,7 @@
 	<SearchBox />
 	<nav class="my-4 flex flex-col sm:flex-row justify-evenly items-center text-blue-800 font-extrabold ">
 		{#each data.categorias as categoria (categoria.id) }
-			<a href="/tienda/{categoria.id}" class="py-2"><span>{categoria.name} </span></a>
+			<a href="/tienda/{JSON.stringify({param:categoria.id, page:1, por_categoria:true})}" class="py-2"><span>{categoria.name} </span></a>
 			
 		{/each}
 

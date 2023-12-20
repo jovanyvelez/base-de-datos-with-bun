@@ -67,7 +67,7 @@
 			}
 		</style>	<a
 				class="mx-1 {i + 1 === data.page ? 'active' : ''}"
-				href={`/tienda/${JSON.stringify({ param: data.query.param, page: 1 + i })}`}
+				href={`/tienda/${JSON.stringify({ param: data.query.param, page: 1 + i, por_categoria: data.query.por_categoria })}`}
 			>
 				{i + 1}
 			</a>

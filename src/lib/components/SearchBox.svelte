@@ -10,7 +10,7 @@
     const handleClick = () => {
         //goto(`/pruebas/${texto}`)
 
-		goto(`/tienda/${JSON.stringify({ param: texto, page: -1 })}`)
+		goto(`/tienda/${JSON.stringify({ param: texto, page: 1, por_categoria: false })}`);
 		texto = '';
     }
 </script>

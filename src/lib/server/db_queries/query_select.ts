@@ -51,11 +51,11 @@ export const products_by_name_query = async (
 			OR: [
 				{ name: { contains: searchTerm, mode: 'insensitive' } },
 				{ codigo: { contains: searchTerm, mode: 'insensitive' } },
-				{ description: { contains: searchTerm, mode: 'insensitive' } }
+				//{ description: { contains: searchTerm, mode: 'insensitive' } }
 			]
 		},
 		take: pageSize, // LIMIT
-		skip: pageSize * (queryPage - 1),
+		skip: pageSize * (queryPage - 1), // OFFSET
 		select: {
 			id: true,
 			name: true,
@@ -84,13 +84,13 @@ export const products_by_name_query = async (
 			OR: [
 				{ name: { contains: searchTerm, mode: 'insensitive' } },
 				{ codigo: { contains: searchTerm, mode: 'insensitive' } },
-				{ description: { contains: searchTerm, mode: 'insensitive' } }
+				//{ description: { contains: searchTerm, mode: 'insensitive' } }
 			]
 		}
 	});
 
 	prisma.$disconnect();
-	//console.log(JSON.stringify(products));
+	
 	return { products, cantidad };
 };
 
