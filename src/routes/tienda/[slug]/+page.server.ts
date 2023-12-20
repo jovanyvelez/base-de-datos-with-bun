@@ -18,8 +18,6 @@ export async function load({ params }) {
 		query = { param: '', page: 1, por_categoria: false };
 	}
 
-	console.log(query);
-
 
 	const pageSize = 12;
 

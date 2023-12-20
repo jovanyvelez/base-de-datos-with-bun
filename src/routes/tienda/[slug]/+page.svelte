@@ -31,7 +31,6 @@
 <Fin herramienta de búsqueda-->
 
 
-
 <!--Muestra los productos a comprar-->
 {#if data.cantidad> 0}
 	<div class="flex flex-wrap justify-center">
@@ -76,7 +75,6 @@
 
 
 {/if}
-
 
 <style>
 	.pagination a {
