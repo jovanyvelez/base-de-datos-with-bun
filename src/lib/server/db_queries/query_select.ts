@@ -6,8 +6,8 @@ export type ProductCard1 = {
 	codigo: string;
 	quantity: number;
 	description: string;
-	prices: {name:string, price:number}[];
-	images: {name:string, secure_url:string}[];
+	prices: { name: string; price: number }[];
+	images: { name: string; secure_url: string }[];
 };
 
 export type ProductCard = {
@@ -40,7 +40,11 @@ interface NewItem {
 	productos: Omit<OriginalItem, 'categoria_id' | 'categoria_name' | 'row_num'>[];
 }
 
-export const products_by_name_query = async (searchTerm: string) => {
+export const products_by_name_query = async (
+	searchTerm: string,
+	pageSize: number,
+	queryPage: number
+) => {
 	//console.log(searchTerm)
 	const products = await prisma.productos.findMany({
 		where: {
@@ -50,48 +54,23 @@ export const products_by_name_query = async (searchTerm: string) => {
 				{ description: { contains: searchTerm, mode: 'insensitive' } }
 			]
 		},
+		take: pageSize, // LIMIT
+		skip: pageSize * (queryPage - 1),
 		select: {
 			id: true,
 			name: true,
 			quantity: true,
 			description: true,
 			codigo: true,
-			categoria_id: true,
+			ean_code: true,
 			tax: true,
-			prices: { where: { name: 'main' }, select: { price: true } },
-			images: { where: { name: 'main' }, select: { name: true, secure_url: true } }
-		}
-	});
-	prisma.$disconnect();
-	//console.log(JSON.stringify(products));
-	return products;
-};
-
-export const consultaPrueba = async (categoria: string) => {
-
-	const productos = await prisma.productos.findMany({
-		where: {
-			active: true,
-			categoria_id: categoria
-		},
-		select: {
-			id: true,
-			name: true,
-			codigo: true,
-			quantity: true,
-			description: true,
 			prices: {
-				where: {
-					name: 'main'
-				},
 				select: {
+					name: true,
 					price: true
 				}
 			},
 			images: {
-				where: {
-					name: 'main'
-				},
 				select: {
 					name: true,
 					secure_url: true
@@ -100,7 +79,19 @@ export const consultaPrueba = async (categoria: string) => {
 		}
 	});
 
-	return productos;
+	const cantidad = await prisma.productos.count({
+		where: {
+			OR: [
+				{ name: { contains: searchTerm, mode: 'insensitive' } },
+				{ codigo: { contains: searchTerm, mode: 'insensitive' } },
+				{ description: { contains: searchTerm, mode: 'insensitive' } }
+			]
+		}
+	});
+
+	prisma.$disconnect();
+	//console.log(JSON.stringify(products));
+	return { products, cantidad };
 };
 
 /**
@@ -122,17 +113,12 @@ export async function buscarUsuario(email: string) {
 	return usuario;
 }
 
-
-
-export async function productosPorCategoria(
+export async function productosPorCategoria_usando_sql(
 	categoriaConsulta: string,
 	pageSize: number,
 	queryPage: number
 ) {
-
-
-
-	const productos: ProductCard1[] = await prisma.$queryRaw`
+	const productos: ProductCard[] = await prisma.$queryRaw`
 	SELECT 
 		productos.id, 
     	productos.name,
@@ -167,9 +153,6 @@ FROM (
 `;
 
 	const cantidad = Number(total[0]['count']);
-
-
-
 
 	await prisma.$disconnect();
 	return { productos, cantidad };
@@ -260,8 +243,6 @@ WHERE row_num <= 4
 	return resultadoObjeto;
 }
 
-
-
 function organizarProductosPorCategoria(arr: OriginalItem[]): NewItem[] {
 	const categorias: { [key: string]: NewItem } = {};
 
@@ -276,11 +257,12 @@ function organizarProductosPorCategoria(arr: OriginalItem[]): NewItem[] {
 	return Object.values(categorias);
 }
 
-export async function test1 (categoriaConsulta:string, pageSize: number,
-	queryPage: number) {
-	
-
-	const products: ProductCard[] = await prisma.productos.findMany({
+export async function productos_por_categoria(
+	categoriaConsulta: string,
+	pageSize: number,
+	queryPage: number
+) {
+	const products: ProductCard1[] = await prisma.productos.findMany({
 		where: {
 			categorias: {
 				some: {
@@ -295,27 +277,26 @@ export async function test1 (categoriaConsulta:string, pageSize: number,
 		select: {
 			id: true,
 			name: true,
-			quantity : true,
-			description : true,
-			codigo : true,
-			ean_code : true,
-			tax : true,
+			quantity: true,
+			description: true,
+			codigo: true,
+			ean_code: true,
+			tax: true,
 			prices: {
-			  select: {
-				name: true,
-				price: true,
-			  },
+				select: {
+					name: true,
+					price: true
+				}
 			},
 			images: {
-			  select: {
-				name: true,
-				secure_url: true,
-			  },
-			},
-		  },
-	
+				select: {
+					name: true,
+					secure_url: true
+				}
+			}
+		}
 	});
-	
+
 	const cantidad = await prisma.productos.count({
 		where: {
 			categorias: {
@@ -326,11 +307,7 @@ export async function test1 (categoriaConsulta:string, pageSize: number,
 				}
 			}
 		}
-	})
+	});
 
-
-	
-	return {products, cantidad}
-
-	
+	return { products, cantidad };
 }
