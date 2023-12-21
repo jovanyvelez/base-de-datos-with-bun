@@ -1,6 +1,7 @@
 import type {  Actions } from './$types';
 import { buscarFullUsuario } from '$lib/server/db_queries/query_select';
 import { saveOrder } from '$lib/server/db_queries/query_create';
+import { redirect } from '@sveltejs/kit';
 
 
 export async function load() {
@@ -11,11 +12,10 @@ export async function load() {
 export const actions = {
 	compra: async ({request, locals}) => {
 
-		console.log("Entra en la accion de compra");
-		
+			
 		const session = await locals.auth.validate();
 
-		if(!session)  return { success: false, savedorder: "nada" };
+		if(!session) throw redirect(302, '/login');
 
 		const data = await request.formData();
 
@@ -26,11 +26,11 @@ export const actions = {
 		const usuario = await buscarFullUsuario(session.user.email);
 
 
-		if(!usuario) return { success: false, savedorder: "nada" };
+		if(!usuario) throw redirect(302, '/');
 
 		const idOrder = await saveOrder(carrito, usuario)
 
-		return { success: true, savedorder: idOrder };
+		return {}
 
 	},
 }satisfies Actions;

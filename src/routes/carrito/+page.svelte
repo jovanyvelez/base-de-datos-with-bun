@@ -125,7 +125,7 @@
 	<a href='/tienda/' type="submit" class="btn btn-outline btn-primary btn-wide"
 		>SEGUIR COMPRANDO</a
 	>
-	<form action="?/compra" method="post" use:enhance={guardar}>
+	<form action="?/compra" method="post" use:enhance>
 		<input type="hidden" bind:value={exportCart} name="carrito">
 		<button type="submit" class="btn btn-primary btn-wide {!yes? 'btn-disabled ':''}"
 			>CHECKOUT
