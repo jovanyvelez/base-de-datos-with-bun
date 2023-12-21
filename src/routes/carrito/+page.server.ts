@@ -15,7 +15,7 @@ export const actions = {
 			
 		const session = await locals.auth.validate();
 
-		if(!session) throw redirect(302, '/login');
+		if(!session) throw redirect(302, '/pruebas');
 
 		const data = await request.formData();
 

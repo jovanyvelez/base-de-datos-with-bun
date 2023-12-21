@@ -44,19 +44,15 @@
 			),
 		});
 
-	const guardar = ()=>{
-		
-		console.log("vamso a ejecutar el accion")
+		const guardar = ({formData})=>{
+		console.log("entro antes del action")
 
-		return async({ result })=>{
+		return async({result})=>{
 			if(result.data.success){
 				const parametro = result.data.savedorder as string
-				orden = result.data.savedorder as string
 				$cart = []
 				//goto(`/termina/${parametro}`)
-			}else{
-				console.log("redirijo")
-				goto('/login')}
+			}else{goto('/login')}
 		}
 
 	}
