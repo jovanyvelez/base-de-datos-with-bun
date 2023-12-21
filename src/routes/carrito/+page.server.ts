@@ -11,7 +11,7 @@ export async function load() {
 export const actions = {
 	compra: async ({request, locals}) => {
 
-
+		console.log("Entra en la accion de compra");
 		
 		const session = await locals.auth.validate();
 

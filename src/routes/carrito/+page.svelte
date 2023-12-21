@@ -46,7 +46,7 @@
 
 	const guardar = ()=>{
 		
-		//Aquí se entra antes del 
+		console.log("vamso a ejecutar el accion")
 
 		return async({ result })=>{
 			if(result.data.success){
