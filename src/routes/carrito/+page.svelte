@@ -54,7 +54,7 @@
 				orden = result.data.savedorder as string
 				$cart = []
 				//goto(`/termina/${parametro}`)
-			}else{goto('/pruebas')}
+			}else{goto('/login')}
 		}
 
 	}
