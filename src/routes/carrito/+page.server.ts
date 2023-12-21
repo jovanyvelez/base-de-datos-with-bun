@@ -15,7 +15,7 @@ export const actions = {
 			
 		const session = await locals.auth.validate();
 
-		if(!session) throw redirect(302, '/pruebas');
+		if(!session) return { success: false, savedorder: "nada" }
 
 		const data = await request.formData();
 
@@ -26,11 +26,11 @@ export const actions = {
 		const usuario = await buscarFullUsuario(session.user.email);
 
 
-		if(!usuario) throw redirect(302, '/');
+		if(!usuario) return { success: false, savedorder: "nada" }
 
 		const idOrder = await saveOrder(carrito, usuario)
-
-		return {}
+		console.log(idOrder);
+		return { success: true, savedorder: idOrder };
 
 	},
 }satisfies Actions;

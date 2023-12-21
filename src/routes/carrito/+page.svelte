@@ -48,11 +48,13 @@
 		console.log("entro antes del action")
 
 		return async({result})=>{
+			console.log(result)
 			if(result.data.success){
 				const parametro = result.data.savedorder as string
 				$cart = []
+				return
 				//goto(`/termina/${parametro}`)
-			}else{goto('/login')}
+			}else{goto('/pruebas')}
 		}
 
 	}
@@ -121,7 +123,7 @@
 	<a href='/tienda/' type="submit" class="btn btn-outline btn-primary btn-wide"
 		>SEGUIR COMPRANDO</a
 	>
-	<form action="?/compra" method="post" use:enhance>
+	<form action="?/compra" method="post" use:enhance={guardar}>
 		<input type="hidden" bind:value={exportCart} name="carrito">
 		<button type="submit" class="btn btn-primary btn-wide {!yes? 'btn-disabled ':''}"
 			>CHECKOUT
