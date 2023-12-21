@@ -3,11 +3,11 @@
 	import { cart } from '$lib/stores/stores';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
+
+
 	
-
-
 	const discount = 0;
-
+	let orden: string | undefined;
 	let empty: boolean = false;
 	let exportCart = JSON.stringify($cart);
 	let yes = false;
@@ -45,14 +45,16 @@
 		});
 
 	const guardar = ({formData})=>{
-		console.log("entro antes del action")
+		
+		//Aquí se entra antes del 
 
-		return async({result})=>{
+		return async({ result })=>{
 			if(result.data.success){
 				const parametro = result.data.savedorder as string
+				orden = result.data.savedorder as string
 				$cart = []
-				goto(`/termina/${parametro}`)
-			}else{goto('/login')}
+				//goto(`/termina/${parametro}`)
+			}else{goto('/pruebas')}
 		}
 
 	}
@@ -133,5 +135,10 @@
 	<span class="mr-2">No has hecho compras</span>
 	<a href="/" class="text-blue-500">Regresar a la tienda</a>
 {/if}
+
+{#if orden}
+	<pre>{orden}</pre>
+{/if}
+
 
 

@@ -61,6 +61,7 @@ model productos {
   images       image[]
   prices       price[]
   categorias   productos_categorias[]
+  ordenes      detalle_orden[]
 }
 
 
@@ -72,6 +73,39 @@ model productos_categorias {
   category    categorias @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@unique([product_id, category_id], map: "asignacion_categorias")
 }
+
+model ordenes{
+  id                    String                  @id @default(uuid())
+  direccion_entrega     String
+  ciudad_ent            String
+  departamento_ent      String
+  metodo_pago           String?
+  estado                estado_orden           @default(recibida)
+  fecha_despacho        DateTime?
+  created_at            DateTime               @default(now())
+  update_at             DateTime               @updatedAt
+  notes                 String?
+  valor                 Float?
+  cod_municipio         String?
+  cod_vendedor          String?
+  usuario               usuario   @relation(fields: [user_id], references: [id])
+  user_id               String
+  detalle               detalle_orden[]
+}
+
+model detalle_orden {
+  id String               @id @default(uuid())
+  cantidad                Int
+  precio                  Float
+  tax                     Float
+  orden                   ordenes @relation(fields: [orden_id], references: [id])
+  orden_id                String
+  product                 productos @relation(fields: [product_id], references: [id])
+  product_id              String
+
+  @@unique([orden_id, product_id], map: "asignacion_orden")
+}
+
 
 model image {
   id         String            @id @default(uuid())
@@ -118,7 +152,8 @@ model usuario {
   created_at              DateTime            @default(now())
   updated_at              DateTime
   zonas                   zonas?               @relation(fields: [zone_id], references: [id])
-  //orden_de_pedido   OrdenDePedido[]
+  ordenes                 ordenes[]
+
 }
 
 model zonas {
@@ -194,4 +229,11 @@ enum tipo_documento {
   cedula
   nit
   pasaporte
+}
+
+enum estado_orden {
+  recibida
+  procesando
+  despachada
+  cancelada
 }

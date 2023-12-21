@@ -10,7 +10,7 @@ export const load = async ({ locals }) => {
 	return {};
 };
 
-export const actions: Actions = {
+export const actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const username = formData.get('username');

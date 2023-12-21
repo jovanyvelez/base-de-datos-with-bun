@@ -1,44 +1,7 @@
 import prisma from '../prisma';
+import type { Product, NewItem, OriginalItem } from '$lib/interfaces/Interfaces_or_types';
 
-export type ProductCard1 = {
-	id: string;
-	name: string;
-	codigo: string;
-	quantity: number;
-	description: string;
-	prices: { name: string; price: number }[];
-	images: { name: string; secure_url: string }[];
-};
 
-export type ProductCard = {
-	id: string;
-	name: string;
-	codigo: string;
-	quantity: number;
-	description: string;
-	price_type: string;
-	price: number;
-	image_type: string;
-	secure_url: string;
-};
-
-interface OriginalItem {
-	categoria_id: string;
-	categoria_name: string;
-	product_id: string;
-	name: string;
-	price_type: string;
-	price: number;
-	image_type: string;
-	secure_url: string;
-	row_num: bigint;
-}
-
-interface NewItem {
-	categoria_id: string;
-	categoria_name: string;
-	productos: Omit<OriginalItem, 'categoria_id' | 'categoria_name' | 'row_num'>[];
-}
 
 export const products_by_name_query = async (
 	searchTerm: string,
@@ -46,7 +9,7 @@ export const products_by_name_query = async (
 	queryPage: number
 ) => {
 	//console.log(searchTerm)
-	const products = await prisma.productos.findMany({
+	const products: Product[] = await prisma.productos.findMany({
 		where: {
 			OR: [
 				{ name: { contains: searchTerm, mode: 'insensitive' } },
@@ -99,13 +62,21 @@ export const products_by_name_query = async (
  * @param {string} email
  */
 
+export async function buscarFullUsuario(email: string) {
+	const user = await prisma.usuario.findUnique({
+		where: { email }
+	});
+
+	return user;
+}
+
 export async function buscarUsuario(email: string) {
 	const user = await prisma.usuario.findUnique({
 		where: { email },
 		select: {
 			id: true,
 			role_id: true,
-			name: true
+			name: true,
 		}
 	});
 	if (!user) return null;
@@ -113,12 +84,55 @@ export async function buscarUsuario(email: string) {
 	return usuario;
 }
 
+export async function foundOrderByCode(order: string, id: string ) {
+
+	const orden = await prisma.ordenes.findUnique({
+		where: { id: order, user_id: id },
+
+		select: {
+			id: true,
+			created_at: true,
+			direccion_entrega: true,
+			ciudad_ent: true,
+			departamento_ent: true,
+			valor: true,
+			usuario: {
+				select: {
+					name: true,
+					phone: true,
+					email: true,
+					doc_type: true,
+					num_doc: true,
+					asesor: true,
+					discount: true
+				}
+			},
+			detalle: {
+				select: {
+					product: {
+						select: {
+							codigo: true,
+							name: true,
+							tax: true
+						}
+					},
+					cantidad: true,
+					precio: true
+				}
+			}
+		}
+	});
+	prisma.$disconnect();
+	console.log(JSON.stringify(orden, null, 2));
+	return orden;
+}
+
 export async function productosPorCategoria_usando_sql(
 	categoriaConsulta: string,
 	pageSize: number,
 	queryPage: number
 ) {
-	const productos: ProductCard[] = await prisma.$queryRaw`
+	const productos: Product[] = await prisma.$queryRaw`
 	SELECT 
 		productos.id, 
     	productos.name,
@@ -156,18 +170,6 @@ FROM (
 
 	await prisma.$disconnect();
 	return { productos, cantidad };
-}
-
-export async function mainCategories1() {
-	const categorias: { id: string; name: string }[] = await prisma.$queryRaw`
-		SELECT categorias.id as id, categorias.name as name
-		FROM categoriasclosure
-		JOIN categorias ON categoriasclosure.hijo = categorias.id
-		WHERE (categoriasclosure.root = categoriasclosure.padre and 
-				categoriasclosure.padre = categoriasclosure.hijo )
-	`;
-
-	return categorias;
 }
 
 export async function mainCategories() {
@@ -262,7 +264,7 @@ export async function productos_por_categoria(
 	pageSize: number,
 	queryPage: number
 ) {
-	const products: ProductCard1[] = await prisma.productos.findMany({
+	const products: Product[] = await prisma.productos.findMany({
 		where: {
 			categorias: {
 				some: {
