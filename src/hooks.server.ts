@@ -5,7 +5,7 @@ import type { Handle } from '@sveltejs/kit';
 export const handle: Handle = async ({ event, resolve }) => {
 	
 	// we can pass `event` because we used the SvelteKit middleware
-
+	console.log("Se ejecuta hooks")
 	event.locals.auth = auth.handleRequest(event);
 	const session = await event.locals.auth.validate();
 
