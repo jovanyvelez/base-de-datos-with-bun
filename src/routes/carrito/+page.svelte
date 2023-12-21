@@ -44,7 +44,7 @@
 			),
 		});
 
-	const guardar = ({formData})=>{
+	const guardar = ()=>{
 		
 		//Aquí se entra antes del 
 
@@ -54,7 +54,9 @@
 				orden = result.data.savedorder as string
 				$cart = []
 				//goto(`/termina/${parametro}`)
-			}else{goto('/login')}
+			}else{
+				console.log("redirijo")
+				goto('/login')}
 		}
 
 	}
