@@ -31,7 +31,7 @@ export const actions = {
 
 		const idOrder = await saveOrder(carrito, usuario)
 
-		enviar_correo(usuario.email,'Compra exitosa',`<p>Felicidades tu compra fue exitosa y tu número de orden es <strong>${idOrder}</strong></p>`)
+		await enviar_correo(usuario.email,'Compra exitosa',`<p>Felicidades tu compra fue exitosa y tu número de orden es <strong>${idOrder}</strong></p>`)
 
 		console.log(idOrder);
 		return { success: true, savedorder: idOrder };
