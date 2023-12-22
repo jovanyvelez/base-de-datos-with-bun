@@ -54,7 +54,7 @@
 				$cart = []
 				return
 				//goto(`/termina/${parametro}`)
-			}else{goto('/pruebas')}
+			}else{goto('/login')}
 		}
 
 	}

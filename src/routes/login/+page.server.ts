@@ -1,57 +1,81 @@
 import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
 import { fail, redirect } from '@sveltejs/kit';
+import type { Action, Actions } from './$types';
+import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
+import { buscarUsuario } from '$lib/server/db_queries/query_select';
 
 
+const userSchema = z.object({
+	texto: z.string().optional(),
+	email: z.string().email(),
+	password: z.string().min(2)
+});
 
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (session) redirect(302, '/');
-	return {};
+
+	const form = await superValidate(userSchema);
+	return { form };
 };
 
-export const actions = {
-	default: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-		// basic check
-		if (typeof username !== 'string' || username.length < 1 || username.length > 31) {
+const login: Action = async ({ request, locals }) => {
+	const form = await superValidate(request, userSchema);
+
+	if (!form.valid) return fail(400, { form });
+
+	let usuario;
+
+	try {
+		// find user by key
+		// and validate password
+		const key = await auth.useKey('email', form.data.email.toLowerCase(), form.data.password);
+		const session = await auth.createSession({
+			userId: key.userId,
+			attributes: {}
+		});
+	
+		usuario = await buscarUsuario(form.data.email);
+
+		if (!usuario?.id) {
+			form.data.texto = 'email o contraseña incorrrecto';
+			fail(400, { form });
+		}
+
+		locals.user = usuario;
+
+		locals.auth.setSession(session); // set session cookie
+	} catch (e) {
+		if (
+			e instanceof LuciaError &&
+			(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
+		) {
+			// user does not exist
+			// or invalid password
 			return fail(400, {
-				message: 'Invalid username'
+				message: 'Incorrect username or password'
 			});
 		}
-		if (typeof password !== 'string' || password.length < 1 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
-		try {
-			// find user by key
-			// and validate password
-			const key = await auth.useKey('email', username.toLowerCase(), password);
-			const session = await auth.createSession({
-				userId: key.userId,
-				attributes: {}
-			});
-			locals.auth.setSession(session); // set session cookie
-		} catch (e) {
-			if (
-				e instanceof LuciaError &&
-				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
-			) {
-				// user does not exist
-				// or invalid password
-				return fail(400, {
-					message: 'Incorrect username or password'
-				});
-			}
-			return fail(500, {
-				message: 'An unknown error occurred'
-			});
-		}
-		// redirect to
-		// make sure you don't throw inside a try/catch block!
-		//redirect(302, '/');
+		return fail(500, {
+			message: 'An unknown error occurred'
+		});
 	}
+
+	const busqueda = locals.user?.role_id ? locals.user?.role_id : 'admin';
+
+	if (  busqueda === 'cliente') {
+		throw redirect(302, '/carrito');
+	} else if (usuario?.role_id && usuario.role_id === 'admin') {
+
+		redirect(302, '/administrator');
+
+	}
+
+	form.data.texto = 'email o contraseña incorrecto';
+	console.log(locals.user)
+	return fail(400, { form });
 };
+
+export const actions: Actions = { login };

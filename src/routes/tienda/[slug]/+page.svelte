@@ -32,6 +32,7 @@
 
 
 <!--Muestra los productos a comprar-->
+
 {#if data.cantidad> 0}
 	<div class="flex flex-wrap justify-center">
 		{#each data.products as product (product.id)}

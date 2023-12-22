@@ -1,7 +1,8 @@
 import type {  Actions } from './$types';
 import { buscarFullUsuario } from '$lib/server/db_queries/query_select';
 import { saveOrder } from '$lib/server/db_queries/query_create';
-import { redirect } from '@sveltejs/kit';
+import enviar_correo  from '$lib/server/send_mails/mails'
+
 
 
 export async function load() {
@@ -29,6 +30,9 @@ export const actions = {
 		if(!usuario) return { success: false, savedorder: "nada" }
 
 		const idOrder = await saveOrder(carrito, usuario)
+
+		enviar_correo(usuario.email,'Compra exitosa',`<p>Felicidades tu compra fue exitosa y tu número de orden es <strong>${idOrder}</strong></p>`)
+
 		console.log(idOrder);
 		return { success: true, savedorder: idOrder };
 
