@@ -60,7 +60,7 @@ const register: Action = async ({ request }) => {
 	//let registro = form.data;
 
 	//Prueba de verificacion de los datos colectados
-	console.log(form.data);
+	//console.log(form.data);
 	if(!form.valid) return fail(400, {form})
 	
 	/*const vendedor = await prisma.sellers.findFirst({
@@ -72,7 +72,7 @@ const register: Action = async ({ request }) => {
 	//compruebo que todo esté OK
 	//console.log(registro)
 	//return message(form, 'Usuario creado!');
-	
+	/*
 	try {
 			await prisma.usuario.create({
 			data: {roleId: form.data.roleId,
@@ -96,7 +96,7 @@ const register: Action = async ({ request }) => {
 		console.log("No se grabó el usuario")
 		return fail(400, {form});
 	}
-
+*/
 
 	return message(form, 'Usuario creado!');
 

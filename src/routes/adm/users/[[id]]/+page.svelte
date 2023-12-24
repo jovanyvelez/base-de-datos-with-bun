@@ -33,7 +33,6 @@
 		const response = await fetch(`/api/ciudad?departamento=${$form.departament}`);
 		const data = await response.json();
 		municipios = data;
-		console.log(municipios);
 	}
 </script>
 
@@ -41,7 +40,7 @@
 {#if $message}
 	<h3>{$message}</h3>
 {/if}
-<form action="?/register" method="post" use:enhance>
+<form action="?/register" method="post">
 	<input type="hidden" name="id" bind:value={$form.id} />
 	<div class="flex flex-wrap flex-col sm:w-8/12 sm:p-10  mx-auto">
 			<input
@@ -99,9 +98,9 @@
 			<small class="text-error">{$errors.phone}</small>
 		{/if}
 
-		<div id="tipo" class=" flex justify-center items-center p-4 px-2 border border-slate-300 rounded-lg mb-5">
+		<div id="tipo" class=" flex justify-center items-center p-2 px-2 border border-slate-300 rounded-lg mb-5">
 			<select
-				name="docType"
+				name="doc_type"
 				bind:value={$form.doc_type}
 				data-invalid={$errors.doc_type}
 				class="select mr-2 mb-3"
