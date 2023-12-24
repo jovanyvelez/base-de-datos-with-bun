@@ -1,5 +1,5 @@
 
-import type { ProductStore } from '$lib/interfaces/Interfaces_or_types';
+import type { ProductStore } from '$lib/types/Interfaces_or_types';
 import type { usuario } from '@prisma/client';
 import prisma from '../prisma';
 

@@ -1,5 +1,5 @@
 import prisma from '../prisma';
-import type { Product, NewItem, OriginalItem } from '$lib/interfaces/Interfaces_or_types';
+import type { Product, NewItem, OriginalItem } from '$lib/types/Interfaces_or_types';
 
 
 
@@ -82,6 +82,27 @@ export async function buscarUsuario(email: string) {
 	if (!user) return null;
 	const usuario = { id: user.id, role_id: user.role_id as string, name: user.name };
 	return usuario;
+}
+
+export async function allDepartments() {
+
+	let departamentos:{departamento:string, codigo:string}[] = [];
+	try {
+		departamentos = await prisma.departamentos.findMany({
+			select: {
+				departamento: true,
+				codigo: true
+			},
+			orderBy: {
+				departamento: 'asc'
+			}	
+		});
+	} catch (error) {
+		console.error('Error al obtener los departamentos:', error);
+	} finally {
+		await prisma.$disconnect();
+	}
+	return departamentos;
 }
 
 export async function foundOrderByCode(order: string, id: string ) {

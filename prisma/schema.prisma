@@ -227,6 +227,7 @@ enum roles {
 
 enum tipo_documento {
   cedula
+  cedula_de_extranjeria
   nit
   pasaporte
 }
