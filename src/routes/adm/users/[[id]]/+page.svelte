@@ -40,13 +40,13 @@
 	}
 </script>
 
-<h1 class="text-3xl">Datos de facturacion</h1>
+<h1 class="text-xl sm:text-3xl text-center  my-4">Datos de facturacion</h1>
 {#if $message}
 	<h3 class=" text-center text-xl text-red-500">{$message}</h3>
 {/if}
 <form action="?/register" method="post">
 	<input type="hidden" name="id" bind:value={$form.id} />
-	<div class="flex flex-wrap flex-col sm:w-8/12 sm:p-10  mx-auto">
+	<div class="flex flex-wrap flex-col sm:w-8/12 sm:p-10 mx-3 sm:mx-auto">
 			<input
 				id="name"
 				name="name"
@@ -102,12 +102,12 @@
 			<small class="text-error">{$errors.phone}</small>
 		{/if}
 
-		<div id="tipo" class=" flex justify-center items-center p-2 px-2 border border-slate-300 rounded-lg ">
+		<div id="tipo" class=" flex flex-col sm:flex-row justify-center items-center p-2 px-2 border border-slate-300 rounded-lg ">
 			<select
 				name="doc_type"
 				bind:value={$form.doc_type}
 				data-invalid={$errors.doc_type}
-				class="select mr-2 mb-3"
+				class="select select-bordered select-xs mr-2 mb-3"
 			>
 				<option disabled>tipo</option>
 				<option value="cedula">cedula</option>
@@ -196,7 +196,7 @@
 		</div>
 		<div>
 			<div class="w-full flex justify-center mt-5">
-				<button type="submit" class="btn btn-sm">Registrar</button>
+				<button type="submit" class="btn btn-sm my-4">Registrar</button>
 
 				{#if $delayed}
 					<span class="text-4xl">Un momento</span>
