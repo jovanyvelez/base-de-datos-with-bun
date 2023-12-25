@@ -45,3 +45,7 @@ export const userSchema = z
 		password: z.string().min(4).trim().regex(/^(?=.*[a-zA-Z])(?=.*\d).*$/, 'debe terner al menos un numero y una letra'),
 	})
 	
+
+	export const userCreateSchema = userSchema.extend({
+		id: userSchema.shape.id.optional()
+	})

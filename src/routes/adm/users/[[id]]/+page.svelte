@@ -5,8 +5,11 @@
 	export let data;
 	const { departamentos } = data;
 
+
 	const userCreateSchema = userSchema.extend({
-		id: userSchema.shape.id.optional()
+		id: userSchema.shape.id.optional(),
+		asesor: userSchema.shape.asesor.optional(),
+		role_id: userSchema.shape.role_id.optional(),
 	});
 
 	type Municipio = {
@@ -29,6 +32,7 @@
 		validators: userCreateSchema
 	});
 
+
 	async function handleSubmit() {
 		const response = await fetch(`/api/ciudad?departamento=${$form.departament}`);
 		const data = await response.json();
@@ -38,7 +42,7 @@
 
 <h1 class="text-3xl">Datos de facturacion</h1>
 {#if $message}
-	<h3>{$message}</h3>
+	<h3 class=" text-center text-xl text-red-500">{$message}</h3>
 {/if}
 <form action="?/register" method="post">
 	<input type="hidden" name="id" bind:value={$form.id} />
@@ -69,7 +73,7 @@
 				data-invalid={$errors.email}
 				bind:value={$form.email}
 				{...$constraints.email}
-				class="input w-full mb-4 {$errors?.email
+				class="input w-full {$errors?.email
 					? 'input-error'
 					: 'input-bordered'}   rounded-md"
 			/>
@@ -88,7 +92,7 @@
 				data-invalid={$errors.phone}
 				bind:value={$form.phone}
 				{...$constraints.phone}
-				class="input mb-4  w-full {$errors?.phone
+				class="input mt-4  w-full {$errors?.phone
 					? 'input-error'
 					: 'input-bordered'}  input-bordered  rounded-xl"
 			/>
@@ -98,7 +102,7 @@
 			<small class="text-error">{$errors.phone}</small>
 		{/if}
 
-		<div id="tipo" class=" flex justify-center items-center p-2 px-2 border border-slate-300 rounded-lg mb-5">
+		<div id="tipo" class=" flex justify-center items-center p-2 px-2 border border-slate-300 rounded-lg ">
 			<select
 				name="doc_type"
 				bind:value={$form.doc_type}
@@ -140,7 +144,7 @@
 				{...$constraints.address}
 				class="input {$errors?.address
 					? 'input-error'
-					: 'input-bordered'} input-sm rounded-md w-full max-w-xs"
+					: 'input-bordered'} input-sm rounded-md w-full max-w-xs mt-4"
 			/>
 		</div>
 		{#if $errors.address}

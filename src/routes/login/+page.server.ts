@@ -40,6 +40,9 @@ const login: Action = async ({ request, locals }) => {
 		usuario = await buscarUsuario(form.data.email);
 
 		if (!usuario?.id) {
+			form.errors = {
+				email: ['Usuario no encontrado'], password: ['Usuario no encontrado']
+			}
 			form.data.texto = 'email o contraseña incorrrecto';
 			fail(400, { form });
 		}

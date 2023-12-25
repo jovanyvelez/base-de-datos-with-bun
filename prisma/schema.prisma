@@ -150,8 +150,8 @@ model usuario {
   datos_asesor            usuario?            @relation("vendedor_cliente", fields: [asesor], references: [id], onDelete: NoAction, onUpdate: NoAction)
   clientes_asesor         usuario[]           @relation("vendedor_cliente")
   created_at              DateTime            @default(now())
-  updated_at              DateTime
-  zonas                   zonas?               @relation(fields: [zone_id], references: [id])
+  updated_at              DateTime            @updatedAt
+  zonas                   zonas?              @relation(fields: [zone_id], references: [id])
   ordenes                 ordenes[]
 
 }
