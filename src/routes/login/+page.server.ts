@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms/server';
 import { buscarUsuario } from '$lib/server/db_queries/query_select';
 
-
 const userSchema = z.object({
 	texto: z.string().optional(),
 	email: z.string().email(),
@@ -25,8 +24,9 @@ const login: Action = async ({ request, locals }) => {
 	const form = await superValidate(request, userSchema);
 
 	if (!form.valid) return fail(400, { form });
+	//console.log(form.data);
 
-	let usuario;
+	const usuario = await buscarUsuario(form.data.email);
 
 	try {
 		// find user by key
@@ -36,16 +36,6 @@ const login: Action = async ({ request, locals }) => {
 			userId: key.userId,
 			attributes: {}
 		});
-	
-		usuario = await buscarUsuario(form.data.email);
-
-		if (!usuario?.id) {
-			form.errors = {
-				email: ['Usuario no encontrado'], password: ['Usuario no encontrado']
-			}
-			form.data.texto = 'email o contraseña incorrrecto';
-			fail(400, { form });
-		}
 
 		locals.user = usuario;
 
@@ -57,8 +47,12 @@ const login: Action = async ({ request, locals }) => {
 		) {
 			// user does not exist
 			// or invalid password
+			form.errors = {
+				email: ['Usuario no encontrado'],
+				password: ['Usuario no encontrado']
+			};
 			return fail(400, {
-				message: 'Incorrect username or password'
+				form
 			});
 		}
 		return fail(500, {
@@ -68,16 +62,14 @@ const login: Action = async ({ request, locals }) => {
 
 	const busqueda = locals.user?.role_id ? locals.user?.role_id : 'admin';
 
-	if (  busqueda === 'cliente') {
+	if (busqueda === 'cliente') {
 		throw redirect(302, '/carrito');
 	} else if (usuario?.role_id && usuario.role_id === 'admin') {
-
 		redirect(302, '/administrator');
-
 	}
 
 	form.data.texto = 'email o contraseña incorrecto';
-	console.log(locals.user)
+	console.log(locals.user);
 	return fail(400, { form });
 };
 

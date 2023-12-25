@@ -103,6 +103,25 @@ export async function buscarUsuarioBYEmailOrDocument (email: string, document: s
 	return usuario;
 }
 
+export async function buscarUsuarioByEmailAndDocument (email: string, document: string) {
+	const user = await prisma.usuario.findFirst({
+		where: {
+			AND: [
+				{ email },
+				{ num_doc: document }
+			]
+		},
+		select: {
+			id: true,
+			role_id: true,
+			name: true,
+		}
+	});
+	if (!user) return null;
+	const usuario = { id: user.id, role_id: user.role_id as string, name: user.name };
+	return usuario;
+}
+
 export async function allDepartments() {
 
 	let departamentos:{departamento:string, codigo:string}[] = [];
