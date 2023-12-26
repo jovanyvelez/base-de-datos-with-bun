@@ -16,7 +16,7 @@
 				</div>
 				<div class="flex flex-wrap justify-center">
 					{#each category.productos as product (product.product_id)}
-						<div class="card w-48 sm:w-64 bg-base-100 shadow-xl mx-2 mt-2">
+						<div class="card w-32 sm:w-64 bg-base-100 shadow-xl mx-2 mt-2">
 							<figure>
 								<img src={product.secure_url} alt="article" class="" />
 							</figure>
