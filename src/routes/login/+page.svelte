@@ -63,6 +63,3 @@
 		<a href="/adm/users" class="text-blue-800">... O registrate</a>
 	</form>
 </div>
-
-
-<pre>{JSON.stringify($errors,null,2)}</pre>

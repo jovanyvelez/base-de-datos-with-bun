@@ -102,7 +102,7 @@
 			<small class="text-error">{$errors.phone}</small>
 		{/if}
 
-		<div id="tipo" class=" flex flex-col sm:flex-row justify-center items-center p-2 px-2 border border-slate-300 rounded-lg ">
+		<div id="tipo" class=" flex flex-col sm:flex-row justify-center items-center p-2 px-2 border my-4 border-slate-300 rounded-lg ">
 			<select
 				name="doc_type"
 				bind:value={$form.doc_type}
@@ -142,9 +142,9 @@
 				data-invalid={$errors.address}
 				bind:value={$form.address}
 				{...$constraints.address}
-				class="input {$errors?.address
+				class="input input-bordered w-full my-4{$errors?.address
 					? 'input-error'
-					: 'input-bordered'} input-sm rounded-md w-full max-w-xs mt-4"
+					: 'input-bordered'}  rounded-md  mt-4"
 			/>
 		</div>
 		{#if $errors.address}
@@ -152,17 +152,15 @@
 		{/if}
 
 		<div class="flex justify flex-col">
-			<label class="label" for="departamento">Seleccione el Departamento</label>
-
 			<select
 				id="departamento"
 				bind:value={$form.departament}
-				class="select select-bordered select-xs w-11/12 mb-5"
+				class="select select-bordered w-full mt-4"
 				data-invalid={$errors.departament}
 				{...$constraints.departament}
 				on:change={() => handleSubmit()}
 				name="departament"
-			>
+			>	 <option value="" disabled selected hidden>Departamento</option>
 				{#each departamentos as departamento (departamento.codigo)}
 					<option value={departamento.departamento}>
 						{departamento.departamento}
@@ -180,7 +178,7 @@
 					id="municipio"
 					{...$constraints.city}
 					bind:value={$form.city}
-					class="select select-bordered select-xs w-11/12 mb-5"
+					class="select select-bordered  w-full mb-5"
 					name="city"
 				>
 					{#each municipios as Municipio (Municipio.codigo)}
