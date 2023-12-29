@@ -18,7 +18,7 @@
 					{#each category.productos as product (product.product_id)}
 						<div class="card w-32 sm:w-64 bg-base-100 shadow-xl mx-2 mt-2">
 							<figure>
-								<img src={product.secure_url} alt="article" class="" />
+								<img src={product.secure_url} alt="article" class="w-full" />
 							</figure>
 							<div class="card-body">
 								<p class="card-title text-sm font-bold">{product.name.trim()}</p>

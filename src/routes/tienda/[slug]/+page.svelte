@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	import Item from '$lib/components/Item.svelte';
-	import { h3 } from 'lucia/middleware';
+
 
 
 	export let data;
