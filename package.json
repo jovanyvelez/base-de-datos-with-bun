@@ -43,7 +43,6 @@
     "@prisma/client": "^5.7.0",
     "@supabase/supabase-js": "^2.39.1",
     "lucia": "^2.7.4",
-    "resend": "^2.0.0",
-    "sharp": "^0.33.1"
+    "resend": "^2.0.0"
   }
 }
