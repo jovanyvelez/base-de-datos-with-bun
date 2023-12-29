@@ -1,7 +1,5 @@
 <script>
 	import { grabar } from "$lib/supabaseClient";
-	import { enhance } from '$app/forms';
-
 
 	export let form;
 
@@ -11,39 +9,60 @@
 	let container;
 	let imagen_modificada;
 	let image;
-	let new_image_url
+	let new_image_url = ''
 	let new_image;
 	let placeholder;
 	let showImage = false;
 
-	function onChange() {
+	async function onChange() {
 
 		const file = input.files[0];
-		let result;
+
 		if (file) {
 			showImage = true;
 			const reader = new FileReader();	
+			let modificar = false;
 			reader.addEventListener('load', function () {
 				
-				image.setAttribute("src",reader.result)
+				new_image.setAttribute("src",reader.result)
 
-				image.onload = (e)=>{
-					
+				new_image_url = reader.result;
+
+				new_image.onload = (e)=>{
+					const w_image = e.target.width;
+					const h_image = e.target.height;
+					let ratio;
 					let canvas = document.createElement("canvas")
-					let ratio = WITH /e.target.width
-					canvas.width = WITH
-					canvas.height = e.target.height * ratio
-					const context = canvas.getContext("2d")
-					context.drawImage(image, 0, 0, canvas.width, canvas.height)
-					new_image_url = context.canvas.toDataURL("image/jpeg", 100 )
-
-					imagen_modificada = urlToFIle(new_image_url)
-					//const resultBlob = dataURItoBlob(new_image_url);
-					const {data, error} = grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_modificada)
+					if(w_image >= h_image && (WITH / w_image) < 1){
+						ratio = WITH / w_image
+						canvas.width = WITH
+						canvas.height = h_image * ratio
+						modificar = true
+					}else if(w_image < h_image && (WITH / h_image) < 1){
+						ratio = WITH / h_image
+						canvas.height = WITH
+						canvas.width = w_image * ratio
+						modificar = true
+					}
+					if(modificar){
+						const context = canvas.getContext("2d")
+						context.drawImage(new_image, 0, 0, canvas.width, canvas.height)
+						new_image_url = context.canvas.toDataURL("image/jpeg", 100 )
+					}
 				}
 			});
+			
 			reader.readAsDataURL(file);
-			image.setAttribute("src", new_image_url)
+			console.log(new_image_url)
+
+			const imagen_to_upload =  urlToFIle(new_image_url)
+			try {
+				console.log("vamos a subir")
+				const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
+			} catch (error) {
+				console.error(error);
+				
+			}
 			console.log("vamos aqui")
 			return;
 		}
@@ -51,6 +70,7 @@
 	}
 
 	let urlToFIle = (url) => {
+		console.log(url)
 		let arr = url.split(",");
 		let mime = arr[0].match(/:(.*?);/)[1];
 		let data = arr[1];
@@ -81,12 +101,16 @@
 	}
 </script>
 
+
+
+<img class="hidden" src="" bind:this={new_image} alt="temporal">
+
 <h1>Image Preview on File Upload</h1>
 <input bind:this={input} on:change={onChange} type="file" accept=".jpg, .jpeg, .png"/>
 
 <div bind:this={container}>
 	{#if showImage}
-		<img bind:this={image} src="" alt="Preview" />
+		<img bind:this={image} src={new_image_url} alt="Preview" />
 	{:else}
 		<span bind:this={placeholder}>Image Preview</span>
 	{/if}
@@ -124,10 +148,10 @@
 
 <style>
 	div {
-		width: 300px;
-		min-height: 100px;
+		max-width: 200px;
+		max-height: 200px;
 		border: 2px solid #ddd;
-		margin-top: 15px;
+		margin-top: 20px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
