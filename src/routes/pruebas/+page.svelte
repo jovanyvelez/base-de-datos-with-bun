@@ -7,28 +7,32 @@
 
 	let input;
 	let container;
-	let imagen_modificada;
+	let imagen_to_upload;
+	let images = [];
 	let image;
 	let new_image_url = ''
-	let new_image;
 	let placeholder;
 	let showImage = false;
 
 	async function onChange() {
 
 		const file = input.files[0];
+		imagen_to_upload = input.files[0];
 
 		if (file) {
 			showImage = true;
 			const reader = new FileReader();	
 			let modificar = false;
+			
+
 			reader.addEventListener('load', function () {
 				
+				const new_image = document.createElement("img")
 				new_image.setAttribute("src",reader.result)
-
 				new_image_url = reader.result;
-
-				new_image.onload = (e)=>{
+				
+				new_image.onload = async (e)=>{
+					
 					const w_image = e.target.width;
 					const h_image = e.target.height;
 					let ratio;
@@ -48,31 +52,30 @@
 						const context = canvas.getContext("2d")
 						context.drawImage(new_image, 0, 0, canvas.width, canvas.height)
 						new_image_url = context.canvas.toDataURL("image/jpeg", 100 )
+						//imagen_to_upload =  urlToFIle(new_image_url)
 					}
+						const existe = buscar_imagen(new_image_url);
+						if(!existe) images = [...images, {file:new_image_url,id:Date.now()}]
+						//const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
+
+						//console.error(error);
+					
 				}
+				new_image.remove();
 			});
 			
 			reader.readAsDataURL(file);
-			console.log(new_image_url)
 
-			const imagen_to_upload =  urlToFIle(new_image_url)
-			try {
-				console.log("vamos a subir")
-				const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
-			} catch (error) {
-				console.error(error);
-				
-			}
-			console.log("vamos aqui")
-			return;
+			return
 		}
 		showImage = false;
 	}
 
 	let urlToFIle = (url) => {
-		console.log(url)
+	
 		let arr = url.split(",");
 		let mime = arr[0].match(/:(.*?);/)[1];
+		console.log(mime)
 		let data = arr[1];
 		let dataStr = atob(data);
 		let n = dataStr.length;
@@ -82,7 +85,7 @@
 		}
 
 		let file = new File([dataArr], 'File.jpg', {type: mime})
-		console.log(file)
+
 		return file
 
 	}
@@ -99,18 +102,29 @@
 
 		return new Blob([ab], { type: mimeString });
 	}
+
+	const deleteThis = (id)=>{
+		images = images.filter(item => item.id != id)
+	}
+
+	const buscar_imagen = (imagen)=>{
+		
+		const temp_image = images.find(item => item.file == imagen);
+
+		return temp_image? true : false 
+	}
 </script>
 
 
 
-<img class="hidden" src="" bind:this={new_image} alt="temporal">
-
 <h1>Image Preview on File Upload</h1>
-<input bind:this={input} on:change={onChange} type="file" accept=".jpg, .jpeg, .png"/>
+<input bind:this={input} on:change={onChange} type="file" accept=".jpg, .jpeg, .png" />
 
-<div bind:this={container}>
+<div bind:this={container} class="flex justify-center items-center p-2 flex-wrap">
 	{#if showImage}
-		<img bind:this={image} src={new_image_url} alt="Preview" />
+		{#each images as item (item.id)}
+			<img  src={item.file} alt="{item.id}}" on:click={deleteThis(item.id)} class="mx-2" />
+		{/each}
 	{:else}
 		<span bind:this={placeholder}>Image Preview</span>
 	{/if}
@@ -146,19 +160,3 @@
 	<button type="submit" class="btn btn-primary">Enviar </button>
 </form-->
 
-<style>
-	div {
-		max-width: 200px;
-		max-height: 200px;
-		border: 2px solid #ddd;
-		margin-top: 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: bold;
-		color: #ccc;
-	}
-	img {
-		width: 100%;
-	}
-</style>
