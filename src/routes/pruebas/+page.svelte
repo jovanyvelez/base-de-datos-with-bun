@@ -123,7 +123,12 @@
 <div bind:this={container} class="flex justify-center items-center p-2 flex-wrap">
 	{#if showImage}
 		{#each images as item (item.id)}
-			<img  src={item.file} alt="{item.id}}" on:click={deleteThis(item.id)} class="mx-2" />
+			<div class="relative">
+				<img  src={item.file} alt="{item.id}}" class="mx-2" />
+				<div class="rounded-full bordered border-2 border-red-500   absolute top-2 right-4 cursor-pointer shadow-lg">
+					<button on:click={() => deleteThis(item.id)}><span class=" text-xs hover:text-sm font-bold p-2 text-red-500 ">X</span></button>
+				</div>
+			</div>	
 		{/each}
 	{:else}
 		<span bind:this={placeholder}>Image Preview</span>
