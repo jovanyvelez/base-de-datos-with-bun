@@ -3,13 +3,12 @@
 
 	//export let form;
 
-	const WITH = 300;
+	const WITH = 250;
 	let primera_imagen = true;
 	let input: HTMLInputElement;
 
 	let imagen_to_upload;
-	let imag: { id: number; main: boolean; file: string }[] = [];
-	$: images = [...imag];
+	let images: { id: number; main: boolean; file: string }[] = [];
 	let new_image_url = '';
 
 	let showImage = false;
@@ -108,7 +107,6 @@
 		return temp_image ? true : false;
 	};
 
-	let selectedDiv = null;
 
 	function selectDiv(image: { id: number; main: boolean; file: string }) {
 		if (image.main) return;
@@ -124,10 +122,12 @@
 	}
 </script>
 
-<main class="m-7 bg-white">
+<main class="m-7 bg-white bordered  shadow-slate-400 shadow-lg rounded-xl">
 	<h1 class="text-3xl font-semibold p-4">Agregar un producto</h1>
 
-	<article class="bordered boer- shadow-slate-400 shadow-lg p-4 rounded-xl">
+	<article class=" p-4 ">
+		<h2 class="text-xl font-semibold mb-2">Agregar fotos del producto</h2>
+		<h3 class="text-lg mb-2">Agrega una o varias imágenes a tu producto</h3>
 		<label for="laImagen">
 			<div class="flex ">
 				<div class="flex flex-col justify-center items-center max-w-md ">
@@ -152,8 +152,11 @@
 		<div class="flex justify-center items-center p-2 flex-wrap">
 			{#if showImage}
 				{#each images as item (item.id)}
-					<div class={`p-2 main relative ${item.main ? 'bordered border-4 border-red-500' : ''}`}>
-						<img src={item.file} alt="{item.id}}" class="mx-2" on:click={selectDiv(item)} />
+					<div class={`p-2  main relative ${item.main ? 'bordered border-4 border-red-500 rounded-xl' : ''}`}>
+						<button on:click={(event)=>selectDiv(item)}>
+							<img src={item.file} alt="{item.id}}" class="mx-2 rounded-xl" />
+						</button>
+						
 						<div
 							class="bg-white rounded-full bordered border-4 border-red-500 absolute top-2 right-4 cursor-pointer shadow-lg"
 						>
