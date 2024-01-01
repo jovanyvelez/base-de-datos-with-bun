@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+
 	//import { grabar } from '$lib/supabaseClient';
 
 	//export let form;
 
-	const WITH = 250;
+	const WITH = 300;
 	let primera_imagen = true;
 	let input: HTMLInputElement;
 	let values = 1;
@@ -66,6 +68,7 @@
 							{ file: new_image_url, id: Date.now(), main: primera_imagen ? true : false }
 						];
 					primera_imagen = false;
+					canvas.remove();
 					//const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
 				};
 				new_image.remove();
@@ -195,18 +198,116 @@
 				name="name"
 				id="name"
 				placeholder="Agrega un nombre"
-				class="input input-primary input-bordered w-full mx-4"
+				class="input input-primary input-bordered w-full m-4"
 			/>
+			<h2 class="text-xl font-semibold mb-2">Agregar marca</h2>
+			<h3 class="text-lg my-4">Agrega la marca del producto, (-Es opcional-)</h3>
+			<input
+				type="text"
+				name="brand"
+				placeholder="Aqui va la marca del producto"
+				class="input input-primary input-bordered w-full m-4"
+			/>
+			<h2 class="text-xl font-semibold mb-2">Agregar codigo</h2>
+
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">Agrega codigo de interno del producto, (-Es opcional-)</h3>
+				<input
+				type="text"
+				name="code"
+				placeholder="codigo ?"
+				class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+			/>
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar codigo EAN</h2>
+
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">Agrega  codigo   EAN   del  producto, ( - Es opcional - )</h3>
+				<input
+				type="text"
+				name="ean_code"
+				placeholder="codigo EAN ?"
+				class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+			/>
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar descripcion</h2>
+			<h3 class="text-lg my-4">Agrega mayor información de tu producto</h3>
+			<textarea
+				placeholder="Escribe aqui la descripcion de tu producto"
+				name="detail"
+				class="textarea textarea-primary textarea-bordered w-full mx-4"
+			></textarea>
 			<h2 class="text-xl font-semibold my-4">Cantidad dispinible</h2>
 			<div class="flex">
-			<h3 class="text-lg my-4">Cantidad de unidades disponibles para la venta</h3>
-			<div class="mx-4 flex flex-col sm:flex-row items-center">
-				<button type="button" on:click={ () => values = Math.round(values - 1) < 0 ? 0 : Math.round(values - 1) }><svg width="50" height="50" viewBox="0 0 50 50"><path fill="currentColor" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="currentColor" d="M16 24h18v2H16z"/></svg></button>
-				<input class="rounded-lg text-xl max-w-20" min=0 name="quantities" bind:value={values} type="number" />
-				<button type="button" on:click={() => values = Math.round(values + 1)}><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><path fill="currentColor" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="currentColor" d="M16 24h18v2H16z"/><path fill="currentColor" d="M24 16h2v18h-2z"/></svg></button>
+				<h3 class="text-lg my-4">Cantidad de unidades disponibles para la venta</h3>
+				<div class="mx-4 flex flex-col sm:flex-row items-center">
+					<button
+						type="button"
+						on:click={() => (values = Math.round(values - 1) < 0 ? 0 : Math.round(values - 1))}
+						><svg width="50" height="50" viewBox="0 0 50 50"
+							><path
+								fill="currentColor"
+								d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"
+							/><path fill="currentColor" d="M16 24h18v2H16z" /></svg
+						></button
+					>
+					<input
+						class="rounded-lg text-xl max-w-20"
+						min="0"
+						name="quantities"
+						bind:value={values}
+						type="number"
+					/>
+					<button type="button" on:click={() => (values = Math.round(values + 1))}
+						><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"
+							><path
+								fill="currentColor"
+								d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"
+							/><path fill="currentColor" d="M16 24h18v2H16z" /><path
+								fill="currentColor"
+								d="M24 16h2v18h-2z"
+							/></svg
+						></button
+					>
+				</div>
 			</div>
-		</div>
-		</form>
+			<h2 class="text-xl font-semibold mb-2">Agregar precio al público</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
+				<input type="number" name="price" required class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista1</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
+				<input type="number" name="price1" required class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista2</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
+				<input type="number" name="price2" required class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista3</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
+				<input type="number" name="price3" required class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar descuento</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
+				<input type="number" name="price" value=0 class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Activacion del producto</h2>
+				<fieldset>
+					<div class="flex align-center">
+					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2">Deseas activar el producto:</legend>
+					<input type="radio" id="activeChoice1" name="active" value=false checked class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"> 
+					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2">SI</label>
+			  
+					<input type="radio" id="activeChoice2" name="active" value=false class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"> 
+					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
+
+				  </div>
+				</fieldset>
 		<!--form
 	action="?/registrar"
 	method="post"
@@ -239,8 +340,6 @@
 	</article>
 </main>
 
-
-
 <style>
 	input[type='number'] {
 		-webkit-appearance: textfield;
@@ -248,8 +347,8 @@
 		appearance: textfield;
 		font-family: sans-serif;
 		padding: 0.5rem;
-		border: none;
-		border-width: 0 2px;
+		border: solid;
+		border-width: 2px;
 		height: 3rem;
 		font-weight: bold;
 		text-align: center;
@@ -260,8 +359,4 @@
 	input[type='number']::-webkit-outer-spin-button {
 		-webkit-appearance: none;
 	}
-
-
-
-
 </style>

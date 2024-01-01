@@ -13,23 +13,22 @@ datasource db {
 //Aquí va todo lo relacionado con categorias, productos, imagenes y precios
 
 model categorias {
-  id                  String                    @id @default(uuid())
-  name                String
-  parent_id           String?
-  created_at          DateTime                  @default(now())
-  updated_at          DateTime
-  papa                categorias?              @relation("hijoapadre", fields: [parent_id], references: [id])
-  hijos               categorias[]             @relation("hijoapadre")
+  id         String       @id @default(uuid())
+  name       String
+  parent_id  String?
+  created_at DateTime     @default(now())
+  updated_at DateTime
+  papa       categorias?  @relation("hijoapadre", fields: [parent_id], references: [id])
+  hijos      categorias[] @relation("hijoapadre")
 
   //Productos e imagenes
-  productos           productos_categorias[]
-  imagenes            image[]
+  productos productos_categorias[]
+  imagenes  image[]
 
   // Tabla uno a muchos  
-  hijo                categoriasclosure[] @relation("hijos")
-  padre               categoriasclosure[] @relation("padres")
-  root                categoriasclosure[] @relation("roots")
-
+  hijo  categoriasclosure[] @relation("hijos")
+  padre categoriasclosure[] @relation("padres")
+  root  categoriasclosure[] @relation("roots")
 }
 
 model categoriasclosure {
@@ -44,26 +43,26 @@ model categoriasclosure {
 }
 
 model productos {
-  id           String     @id @default(uuid())
+  id           String                 @id @default(uuid())
   name         String
   active       Boolean
-  categoria_id String
-  codigo       String     @unique
-  created_at   DateTime   @default(now())
+  categoria_id String?
+  codigo       String?                @unique
+  created_at   DateTime               @default(now())
   description  String
-  ean_code     String?    @unique
-  marca        String
+  ean_code     String?                @unique
+  marca        String?                @default("Sin marca")
   new          Boolean
   promo        Boolean
+  descuento    Float?                 @default(0.0)
   quantity     Float
-  tax          Float      @default(0.0)
-  updated_at   DateTime
+  tax          Float                  @default(0.0)
+  updated_at   DateTime               @updatedAt
   images       image[]
   prices       price[]
   categorias   productos_categorias[]
   ordenes      detalle_orden[]
 }
-
 
 model productos_categorias {
   id          String     @id @default(uuid())
@@ -71,53 +70,54 @@ model productos_categorias {
   category_id String
   product     productos  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category    categorias @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
   @@unique([product_id, category_id], map: "asignacion_categorias")
 }
 
-model ordenes{
-  id                    String                  @id @default(uuid())
-  direccion_entrega     String
-  ciudad_ent            String
-  departamento_ent      String
-  metodo_pago           String?
-  estado                estado_orden           @default(recibida)
-  fecha_despacho        DateTime?
-  created_at            DateTime               @default(now())
-  update_at             DateTime               @updatedAt
-  notes                 String?
-  valor                 Float?
-  cod_municipio         String?
-  cod_vendedor          String?
-  usuario               usuario   @relation(fields: [user_id], references: [id])
-  user_id               String
-  detalle               detalle_orden[]
+model ordenes {
+  id                String          @id @default(uuid())
+  direccion_entrega String
+  ciudad_ent        String
+  departamento_ent  String
+  metodo_pago       String?
+  estado            estado_orden    @default(recibida)
+  fecha_despacho    DateTime?
+  created_at        DateTime        @default(now())
+  update_at         DateTime        @updatedAt
+  notes             String?
+  valor             Float?
+  cod_municipio     String?
+  cod_vendedor      String?
+  usuario           usuario         @relation(fields: [user_id], references: [id])
+  user_id           String
+  detalle           detalle_orden[]
 }
 
 model detalle_orden {
-  id String               @id @default(uuid())
-  cantidad                Int
-  precio                  Float
-  tax                     Float
-  orden                   ordenes @relation(fields: [orden_id], references: [id])
-  orden_id                String
-  product                 productos @relation(fields: [product_id], references: [id])
-  product_id              String
+  id         String    @id @default(uuid())
+  cantidad   Int
+  precio     Float
+  tax        Float
+  orden      ordenes   @relation(fields: [orden_id], references: [id])
+  orden_id   String
+  product    productos @relation(fields: [product_id], references: [id])
+  product_id String
 
   @@unique([orden_id, product_id], map: "asignacion_orden")
 }
 
-
 model image {
-  id         String            @id @default(uuid())
-  public_id  String
-  secure_url String
-  created_at DateTime          @default(now())
-  updated_at DateTime
-  product_id String?
+  id           String            @id @default(uuid())
+  public_id    String
+  secure_url   String
+  created_at   DateTime          @default(now())
+  updated_at   DateTime
+  product_id   String?
   categoria_id String?
-  name       opciones_producto @default(main)
-  product    productos?         @relation(fields: [product_id], references: [id])
-  categoria  categorias?        @relation(fields: [categoria_id], references: [id])
+  name         opciones_producto @default(main)
+  product      productos?        @relation(fields: [product_id], references: [id])
+  categoria    categorias?       @relation(fields: [categoria_id], references: [id])
+
   @@unique([product_id, name], map: "asignacion_imagen")
 }
 
@@ -129,47 +129,47 @@ model price {
   product_id String
   name       opciones_producto @default(main)
   product    productos         @relation(fields: [product_id], references: [id])
+
   @@unique([product_id, name], map: "asignacion_precio")
 }
 
 model usuario {
-  id                      String              @id @default(uuid())
-  role_id                 roles               @default(cliente)
-  name                    String
-  phone                   String
-  email                   String              @unique
-  doc_type                tipo_documento  
-  num_doc                 String              @unique
-  departament             String
-  city                    String
-  address                 String
-  bussiness_unit          String?
-  zone_id                 Int?
-  asesor                  String?
-  discount                Float?              @default(0)
-  datos_asesor            usuario?            @relation("vendedor_cliente", fields: [asesor], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  clientes_asesor         usuario[]           @relation("vendedor_cliente")
-  created_at              DateTime            @default(now())
-  updated_at              DateTime            @updatedAt
-  zonas                   zonas?              @relation(fields: [zone_id], references: [id])
-  ordenes                 ordenes[]
-
+  id              String         @id @default(uuid())
+  role_id         roles          @default(cliente)
+  name            String
+  phone           String
+  email           String         @unique
+  doc_type        tipo_documento
+  num_doc         String         @unique
+  departament     String
+  city            String
+  address         String
+  bussiness_unit  String?
+  zone_id         Int?
+  asesor          String?
+  discount        Float?         @default(0)
+  datos_asesor    usuario?       @relation("vendedor_cliente", fields: [asesor], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clientes_asesor usuario[]      @relation("vendedor_cliente")
+  created_at      DateTime       @default(now())
+  updated_at      DateTime       @updatedAt
+  zonas           zonas?         @relation(fields: [zone_id], references: [id])
+  ordenes         ordenes[]
 }
 
 model zonas {
-  id                   Int                    @id @default(autoincrement())
-  name                 String
-  zone                 String                 @unique
-  usuario              usuario[]
+  id      Int       @id @default(autoincrement())
+  name    String
+  zone    String    @unique
+  usuario usuario[]
 }
 
 // Ciudadese y departamentos de Colombia
 model ciudades {
-  id             String        @id @default(uuid())
-  ciudad         String
-  codigo         String
+  id              String        @id @default(uuid())
+  ciudad          String
+  codigo          String
   departamento_id String
-  departamentos  departamentos @relation(fields: [departamento_id], references: [id])
+  departamentos   departamentos @relation(fields: [departamento_id], references: [id])
 }
 
 model departamentos {
@@ -178,7 +178,6 @@ model departamentos {
   codigo       String
   ciudades     ciudades[]
 }
-
 
 //Autenticación de usuario
 model user {
@@ -206,7 +205,6 @@ model user_key {
 
   @@index([user_id])
 }
-
 
 // tipos de datos
 enum opciones_producto {
