@@ -3,60 +3,6 @@ import type { Product, NewItem, OriginalItem } from '$lib/types/Interfaces_or_ty
 
 
 
-export const products_by_name_query = async (
-	searchTerm: string,
-	pageSize: number,
-	queryPage: number
-) => {
-	//console.log(searchTerm)
-	const products: Product[] = await prisma.productos.findMany({
-		where: {
-			OR: [
-				{ name: { contains: searchTerm, mode: 'insensitive' } },
-				{ codigo: { contains: searchTerm, mode: 'insensitive' } },
-				//{ description: { contains: searchTerm, mode: 'insensitive' } }
-			]
-		},
-		take: pageSize, // LIMIT
-		skip: pageSize * (queryPage - 1), // OFFSET
-		select: {
-			id: true,
-			name: true,
-			quantity: true,
-			description: true,
-			codigo: true,
-			ean_code: true,
-			tax: true,
-			prices: {
-				select: {
-					name: true,
-					price: true
-				}
-			},
-			images: {
-				select: {
-					name: true,
-					secure_url: true
-				}
-			}
-		}
-	});
-
-	const cantidad = await prisma.productos.count({
-		where: {
-			OR: [
-				{ name: { contains: searchTerm, mode: 'insensitive' } },
-				{ codigo: { contains: searchTerm, mode: 'insensitive' } },
-				//{ description: { contains: searchTerm, mode: 'insensitive' } }
-			]
-		}
-	});
-
-	prisma.$disconnect();
-	
-	return { products, cantidad };
-};
-
 /**
  * Busca un usuario de acuerdo a email en tabla user
  * @param {string} email
@@ -76,7 +22,7 @@ export async function buscarUsuario(email: string) {
 		select: {
 			id: true,
 			role_id: true,
-			name: true,
+			name: true
 		}
 	});
 	if (!user) return null;
@@ -84,18 +30,15 @@ export async function buscarUsuario(email: string) {
 	return usuario;
 }
 
-export async function buscarUsuarioBYEmailOrDocument (email: string, document: string) {
+export async function buscarUsuarioBYEmailOrDocument(email: string, document: string) {
 	const user = await prisma.usuario.findFirst({
 		where: {
-			OR: [
-				{ email },
-				{ num_doc: document }
-			]
+			OR: [{ email }, { num_doc: document }]
 		},
 		select: {
 			id: true,
 			role_id: true,
-			name: true,
+			name: true
 		}
 	});
 	if (!user) return null;
@@ -103,18 +46,15 @@ export async function buscarUsuarioBYEmailOrDocument (email: string, document: s
 	return usuario;
 }
 
-export async function buscarUsuarioByEmailAndDocument (email: string, document: string) {
+export async function buscarUsuarioByEmailAndDocument(email: string, document: string) {
 	const user = await prisma.usuario.findFirst({
 		where: {
-			AND: [
-				{ email },
-				{ num_doc: document }
-			]
+			AND: [{ email }, { num_doc: document }]
 		},
 		select: {
 			id: true,
 			role_id: true,
-			name: true,
+			name: true
 		}
 	});
 	if (!user) return null;
@@ -123,8 +63,7 @@ export async function buscarUsuarioByEmailAndDocument (email: string, document: 
 }
 
 export async function allDepartments() {
-
-	let departamentos:{departamento:string, codigo:string}[] = [];
+	let departamentos: { departamento: string; codigo: string }[] = [];
 	try {
 		departamentos = await prisma.departamentos.findMany({
 			select: {
@@ -133,7 +72,7 @@ export async function allDepartments() {
 			},
 			orderBy: {
 				departamento: 'asc'
-			}	
+			}
 		});
 	} catch (error) {
 		console.error('Error al obtener los departamentos:', error);
@@ -143,8 +82,7 @@ export async function allDepartments() {
 	return departamentos;
 }
 
-export async function foundOrderByCode(order: string, id: string ) {
-
+export async function foundOrderByCode(order: string, id: string) {
 	const orden = await prisma.ordenes.findUnique({
 		where: { id: order, user_id: id },
 
@@ -184,6 +122,91 @@ export async function foundOrderByCode(order: string, id: string ) {
 	prisma.$disconnect();
 	console.log(JSON.stringify(orden, null, 2));
 	return orden;
+}
+
+export const products_by_name_query = async (
+	searchTerm: string,
+	pageSize: number,
+	queryPage: number
+) => {
+	const products: Product[] = await prisma.productos.findMany({
+		where: {
+			OR: [
+				{ name: { contains: searchTerm, mode: 'insensitive' } },
+				{ codigo: { contains: searchTerm, mode: 'insensitive' } }
+				//{ description: { contains: searchTerm, mode: 'insensitive' } }
+			]
+		},
+		take: pageSize, // LIMIT
+		skip: pageSize * (queryPage - 1), // OFFSET
+		select: {
+			id: true,
+			name: true,
+			quantity: true,
+			description: true,
+			codigo: true,
+			ean_code: true,
+			tax: true,
+			prices: {
+				select: {
+					name: true,
+					price: true
+				}
+			},
+			images: {
+				select: {
+					name: true,
+					secure_url: true
+				}
+			}
+		}
+	});
+
+	const cantidad = await prisma.productos.count({
+		where: {
+			OR: [
+				{ name: { contains: searchTerm, mode: 'insensitive' } },
+				{ codigo: { contains: searchTerm, mode: 'insensitive' } }
+				//{ description: { contains: searchTerm, mode: 'insensitive' } }
+			]
+		}
+	});
+
+	prisma.$disconnect();
+
+	return { products, cantidad };
+};
+
+export const products_by_id = async (id: string) => {
+	const product = await prisma.productos.findUnique({
+		where: { id },
+		select: {
+			id: true,
+			name: true,
+			active: true,
+			codigo: true,
+			description: true,
+			ean_code: true,
+			marca: true,
+			new: true,
+			descuento: true,
+			quantity: true,
+			tax: true,
+			prices: {
+				select: {
+					name: true,
+					price: true
+				}
+			},
+			images: {
+				select: {
+					name: true,
+					secure_url: true
+				}
+			}	
+		}	
+	});
+	return product;
 }
 
 export async function productosPorCategoria_usando_sql(
@@ -229,42 +252,6 @@ FROM (
 
 	await prisma.$disconnect();
 	return { productos, cantidad };
-}
-
-export async function mainCategories() {
-	const categorias: { id: string; name: string }[] = await prisma.categorias.findMany({
-		where: {
-			parent_id: null
-		},
-		select: {
-			id: true,
-			name: true
-		}
-	});
-
-	return categorias;
-}
-
-export async function categoriasPrincipales() {
-	const productos = await prisma.$queryRaw`
-	SELECT categorias.name as categoria, categorias.id , productos.id as product_id, productos.name, price.name as price_type, price.price, image.name as image_type, image.secure_url
-	FROM productos
-	JOIN price ON productos.id = price.product_id
-	JOIN image on productos.id = image.product_id
-	JOIN categorias on productos."categoria_id" = categorias.id
-	WHERE productos."categoria_id" IN (
-		SELECT categorias.id
-		FROM categoriasclosure
-		JOIN categorias ON categoriasclosure.hijo = categorias.id
-		WHERE (categoriasclosure.root = categoriasclosure.padre and 
-				categoriasclosure.padre = categoriasclosure.hijo )
-	)
-	ORDER BY random()
-	LIMIT 4
-`;
-	console.log('categorias ppales');
-	prisma.$disconnect();
-	return productos;
 }
 
 export async function productosAleatorios() {
@@ -371,4 +358,40 @@ export async function productos_por_categoria(
 	});
 
 	return { products, cantidad };
+}
+
+export async function mainCategories() {
+	const categorias: { id: string; name: string }[] = await prisma.categorias.findMany({
+		where: {
+			parent_id: null
+		},
+		select: {
+			id: true,
+			name: true
+		}
+	});
+
+	return categorias;
+}
+
+export async function categoriasPrincipales() {
+	const productos = await prisma.$queryRaw`
+		SELECT categorias.name as categoria, categorias.id , productos.id as product_id, productos.name, price.name as price_type, price.price, image.name as image_type, image.secure_url
+		FROM productos
+		JOIN price ON productos.id = price.product_id
+		JOIN image on productos.id = image.product_id
+		JOIN categorias on productos."categoria_id" = categorias.id
+		WHERE productos."categoria_id" IN (
+			SELECT categorias.id
+			FROM categoriasclosure
+			JOIN categorias ON categoriasclosure.hijo = categorias.id
+			WHERE (categoriasclosure.root = categoriasclosure.padre and 
+					categoriasclosure.padre = categoriasclosure.hijo )
+		)
+		ORDER BY random()
+		LIMIT 4
+	`;
+	console.log('categorias ppales');
+	prisma.$disconnect();
+	return productos;
 }

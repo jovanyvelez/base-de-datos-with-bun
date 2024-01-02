@@ -1,17 +1,26 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
+
+	import { superForm } from "sveltekit-superforms/client";
+
 
 	//import { grabar } from '$lib/supabaseClient';
 
 	//export let form;
+	export let data;
+	const { form } = superForm(data.form);
 
 	const WITH = 300;
 	let primera_imagen = true;
 	let input: HTMLInputElement;
-	let values = 1;
+	$form.quantity = 1;
+	$form.tax = 0;
+	$form.descuento = 0;
+	$form.active = "on";
+	$form.new = "on";
 
 	let imagen_to_upload;
 	let images: { id: number; main: boolean; file: string }[] = [];
+	let send_images : string[] = [];
 	let new_image_url = '';
 
 	let showImage = false;
@@ -59,7 +68,7 @@
 							context.drawImage(new_image, 0, 0, canvas.width, canvas.height);
 							new_image_url = context.canvas.toDataURL('image/jpeg', 100);
 						}
-						//imagen_to_upload =  urlToFIle(new_image_url).relative.s-lavbwSbrVjO3
+						//imagen_to_upload =  urlToFIle(new_image_url)
 					}
 					const existe = buscar_imagen(new_image_url);
 					if (!existe)
@@ -67,6 +76,9 @@
 							...images,
 							{ file: new_image_url, id: Date.now(), main: primera_imagen ? true : false }
 						];
+
+						//send_images = [...send_images, JSON.stringify(urlToFIle(new_image_url) as File)];
+						
 					primera_imagen = false;
 					canvas.remove();
 					//const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
@@ -125,6 +137,15 @@
 			}
 		});
 		images = [...images];
+	}
+	const convertir_a_string = async () => {
+		console.log(images);
+		const temp =  images.map( (item) => {
+			return item.file;
+		})
+		$form.send_images = JSON.stringify({files:temp});
+
+		console.log(temp);
 	}
 </script>
 
@@ -190,13 +211,15 @@
 			{/if}
 		</div>
 
-		<form method="">
-			<h2 class="text-xl font-semibold mb-2">Agregar nombre</h2>
+		<form method="post" action="?/create">
+			<input type="hidden" name="send_images" bind:value={$form.send_images}>
+			<input type="hidden" name="id" bind:value={$form.id} />			<h2 class="text-xl font-semibold mb-2">Agregar nombre</h2>
 			<h3 class="text-lg my-4">Agrega un nombre del producto, que lo diferencie de otros</h3>
 			<input
 				type="text"
 				name="name"
 				id="name"
+				bind:value={$form.name}
 				placeholder="Agrega un nombre"
 				class="input input-primary input-bordered w-full m-4"
 			/>
@@ -204,7 +227,8 @@
 			<h3 class="text-lg my-4">Agrega la marca del producto, (-Es opcional-)</h3>
 			<input
 				type="text"
-				name="brand"
+				name="marca"
+				bind:value={$form.marca}
 				placeholder="Aqui va la marca del producto"
 				class="input input-primary input-bordered w-full m-4"
 			/>
@@ -213,37 +237,40 @@
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">Agrega codigo de interno del producto, (-Es opcional-)</h3>
 				<input
-				type="text"
-				name="code"
-				placeholder="codigo ?"
-				class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
-			/>
+					type="text"
+					name="codigo"
+					bind:value={$form.codigo}
+					placeholder="codigo ?"
+					class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+				/>
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar codigo EAN</h2>
 
 			<div class="flex items-center">
-				<h3 class="text-lg my-4">Agrega  codigo   EAN   del  producto, ( - Es opcional - )</h3>
+				<h3 class="text-lg my-4">Agrega codigo EAN del producto, ( - Es opcional - )</h3>
 				<input
-				type="text"
-				name="ean_code"
-				placeholder="codigo EAN ?"
-				class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
-			/>
+					type="text"
+					name="ean_code"
+					bind:value={$form.ean_code}
+					placeholder="codigo EAN ?"
+					class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+				/>
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar descripcion</h2>
 			<h3 class="text-lg my-4">Agrega mayor información de tu producto</h3>
 			<textarea
+				bind:value={$form.description}
 				placeholder="Escribe aqui la descripcion de tu producto"
-				name="detail"
+				name="description"
 				class="textarea textarea-primary textarea-bordered w-full mx-4"
 			></textarea>
-			<h2 class="text-xl font-semibold my-4">Cantidad dispinible</h2>
+			<h2 class="text-xl font-semibold my-4">Cantidad disponible</h2>
 			<div class="flex">
 				<h3 class="text-lg my-4">Cantidad de unidades disponibles para la venta</h3>
 				<div class="mx-4 flex flex-col sm:flex-row items-center">
 					<button
 						type="button"
-						on:click={() => (values = Math.round(values - 1) < 0 ? 0 : Math.round(values - 1))}
+						on:click={() => ($form.quantity = Math.round($form.quantity - 1) < 0 ? 0 : Math.round($form.quantity - 1))}
 						><svg width="50" height="50" viewBox="0 0 50 50"
 							><path
 								fill="currentColor"
@@ -254,11 +281,11 @@
 					<input
 						class="rounded-lg text-xl max-w-20"
 						min="0"
-						name="quantities"
-						bind:value={values}
+						name="quantity"
+						bind:value={$form.quantity}
 						type="number"
 					/>
-					<button type="button" on:click={() => (values = Math.round(values + 1))}
+					<button type="button" on:click={() => ($form.quantity = Math.round($form.quantity + 1))}
 						><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"
 							><path
 								fill="currentColor"
@@ -274,41 +301,85 @@
 			<h2 class="text-xl font-semibold mb-2">Agregar precio al público</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price" required class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="price" bind:value={$form.price} class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista1</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price1" required class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="price1" bind:value={$form.price1} class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista2</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price2" required class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="price2" bind:value={$form.price2}  class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista3</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price3" required class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="price3" bind:value={$form.price3}  class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar descuento</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
-				<input type="number" name="price" value=0 class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="price" bind:value={$form.descuento} class="min-w-16 mx-4 rounded-full" />
+			</div>
+			<h2 class="text-xl font-semibold mb-2">Agregar iva</h2>
+			<div class="flex items-center">
+				<h3 class="text-lg my-4">Agrega el iva en porcentaje</h3>
+				<input type="number" name="tax" bind:value={$form.tax}  class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Activacion del producto</h2>
-				<fieldset>
-					<div class="flex align-center">
-					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2">Deseas activar el producto:</legend>
-					<input type="radio" id="activeChoice1" name="active" value=false checked class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"> 
+			<fieldset>
+				<div class="flex align-center">
+					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2"
+						>Deseas activar el producto:</legend
+					>
+					<input
+						type="radio"
+						id="activeChoice1"
+						bind:value={$form.active}
+						name="active"
+						checked
+						class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+					/>
 					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2">SI</label>
-			  
-					<input type="radio" id="activeChoice2" name="active" value=false class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"> 
-					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
 
-				  </div>
-				</fieldset>
-		<!--form
+					<input
+						type="radio"
+						id="activeChoice2"
+						bind:value={$form.active}
+						name="active"
+						class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+					/>
+					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="flex align-center">
+					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2"
+						>Es una referencia nueva?</legend
+					>
+					<input
+						type="radio"
+						id="activeChoice1"
+						bind:value={$form.new}
+						name="new"
+						checked
+						class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+					/>
+					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2">SI</label>
+
+					<input
+						type="radio"
+						id="activeChoice2"
+						bind:value={$form.new}
+						name="new"
+						class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+					/>
+					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
+				</div>
+			</fieldset>
+			<!--form
 	action="?/registrar"
 	method="post"
 	enctype="multipart/form-data"
@@ -337,6 +408,8 @@
 	/>
 	<button type="submit" class="btn btn-primary">Enviar </button>
 </form-->
+			<button type="submit" on:click={convertir_a_string} class="btn btn-primary">Enviar </button>
+		</form>
 	</article>
 </main>
 

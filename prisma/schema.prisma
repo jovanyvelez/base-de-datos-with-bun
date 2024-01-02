@@ -52,10 +52,10 @@ model productos {
   description  String
   ean_code     String?                @unique
   marca        String?                @default("Sin marca")
-  new          Boolean
-  promo        Boolean
+  new          Boolean?               @default(true)
+  promo        Boolean?               @default(false)
   descuento    Float?                 @default(0.0)
-  quantity     Float
+  quantity     Float?                 @default(0.0)
   tax          Float                  @default(0.0)
   updated_at   DateTime               @updatedAt
   images       image[]
