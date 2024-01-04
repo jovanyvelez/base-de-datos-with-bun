@@ -118,3 +118,45 @@ export async function creatUserFromWeb(usuario: usuario) {
 
 	return {newUser, session};
 }
+
+export async function createProductFromAdmin ( name:string, 
+											   quantity:number, 
+											   marca:string,
+											   codigo: string,
+											   ean_code: string,
+											   description: string,
+											   descuento: number,
+											   tax: number,
+											   active: boolean,
+											   nuevo: boolean) 
+											   {
+	const producto = await prisma.productos.create({
+		data: {
+			name,
+			marca,
+			codigo,
+			ean_code,
+			description,
+			quantity,
+			descuento,
+			tax,
+			active,
+			nuevo
+		}
+	})
+
+	return producto.id;
+}
+
+export async function createProductImages(datos: {product_id :string; secure_url:string}[]){
+	console.log('grabando imagenes', datos)
+	try {
+		await prisma.image.createMany({
+			data: datos
+		})
+		return true
+	} catch (error) {
+		console.log('error en la grabacion del registro',error)
+		return false
+	}
+}

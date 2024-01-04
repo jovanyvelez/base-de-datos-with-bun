@@ -2,10 +2,6 @@
 
 	import { superForm } from "sveltekit-superforms/client";
 
-
-	//import { grabar } from '$lib/supabaseClient';
-
-	//export let form;
 	export let data;
 	const { form } = superForm(data.form);
 
@@ -15,19 +11,21 @@
 	$form.quantity = 1;
 	$form.tax = 0;
 	$form.descuento = 0;
+	$form.price = 0;
+	$form.price1 = 0;
+	$form.price2 = 0;
+	$form.price3 = 0;
 	$form.active = "on";
-	$form.new = "on";
+	$form.nuevo = "on";
 
-	let imagen_to_upload;
 	let images: { id: number; main: boolean; file: string }[] = [];
-	let send_images : string[] = [];
 	let new_image_url = '';
 
 	let showImage = false;
 
 	async function onChange() {
 		const file = input.files ? input.files[0] : null;
-		imagen_to_upload = input.files ? input.files[0] : null;
+
 
 		if (file) {
 			showImage = true;
@@ -76,9 +74,6 @@
 							...images,
 							{ file: new_image_url, id: Date.now(), main: primera_imagen ? true : false }
 						];
-
-						//send_images = [...send_images, JSON.stringify(urlToFIle(new_image_url) as File)];
-						
 					primera_imagen = false;
 					canvas.remove();
 					//const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
@@ -87,7 +82,6 @@
 			});
 
 			reader.readAsDataURL(file);
-
 			return;
 		}
 		showImage = false;
@@ -138,14 +132,11 @@
 		});
 		images = [...images];
 	}
-	const convertir_a_string = async () => {
-		console.log(images);
+	const convert_to_string = async () => {
 		const temp =  images.map( (item) => {
-			return item.file;
+			return {file:item.file,main:item.main};
 		})
 		$form.send_images = JSON.stringify({files:temp});
-
-		console.log(temp);
 	}
 </script>
 
@@ -321,7 +312,7 @@
 			<h2 class="text-xl font-semibold mb-2">Agregar descuento</h2>
 			<div class="flex items-center">
 				<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
-				<input type="number" name="price" bind:value={$form.descuento} class="min-w-16 mx-4 rounded-full" />
+				<input type="number" name="descuento" bind:value={$form.descuento} class="min-w-16 mx-4 rounded-full" />
 			</div>
 			<h2 class="text-xl font-semibold mb-2">Agregar iva</h2>
 			<div class="flex items-center">
@@ -362,8 +353,8 @@
 					<input
 						type="radio"
 						id="activeChoice1"
-						bind:value={$form.new}
-						name="new"
+						bind:value={$form.nuevo}
+						name="nuevo"
 						checked
 						class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 					/>
@@ -372,43 +363,14 @@
 					<input
 						type="radio"
 						id="activeChoice2"
-						bind:value={$form.new}
-						name="new"
+						bind:value={$form.nuevo}
+						name="nuevo"
 						class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 					/>
 					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
 				</div>
 			</fieldset>
-			<!--form
-	action="?/registrar"
-	method="post"
-	enctype="multipart/form-data"
-	use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-		// `formElement` is this `<form>` element
-		// `formData` is its `FormData` object that's about to be submitted
-		formData.append('nueva_imagen', imagen_modificada);
-
-		// `action` is the URL to which the form is posted
-		// calling `cancel()` will prevent the submission
-		// `submitter` is the `HTMLElement` that caused the form to be submitted
-
-		return async ({ result, update }) => {
-			// `result` is an `ActionResult` object
-			// `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-		};
-	}}
->
-	<input
-		id="file"
-		name="file"
-		bind:this={input}
-		on:change={onChange}
-		type="file"
-		accept=".jpg, .jpeg, .png"
-	/>
-	<button type="submit" class="btn btn-primary">Enviar </button>
-</form-->
-			<button type="submit" on:click={convertir_a_string} class="btn btn-primary">Enviar </button>
+			<button type="submit" on:click={convert_to_string} class="btn btn-primary">Enviar </button>
 		</form>
 	</article>
 </main>

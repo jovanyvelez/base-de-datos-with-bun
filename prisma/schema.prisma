@@ -44,20 +44,20 @@ model categoriasclosure {
 
 model productos {
   id           String                 @id @default(uuid())
-  name         String
-  active       Boolean
-  categoria_id String?
+  name         String                 
+  active       Boolean?               @default(true)
   codigo       String?                @unique
-  created_at   DateTime               @default(now())
-  description  String
+  description  String                 @default("Sin descripción")
   ean_code     String?                @unique
   marca        String?                @default("Sin marca")
-  new          Boolean?               @default(true)
+  nuevo        Boolean?               @default(true)
   promo        Boolean?               @default(false)
   descuento    Float?                 @default(0.0)
   quantity     Float?                 @default(0.0)
   tax          Float                  @default(0.0)
+  created_at   DateTime               @default(now())
   updated_at   DateTime               @updatedAt
+  categoria_id String?
   images       image[]
   prices       price[]
   categorias   productos_categorias[]
@@ -108,24 +108,24 @@ model detalle_orden {
 
 model image {
   id           String            @id @default(uuid())
-  public_id    String
+  public_id    String?
   secure_url   String
   created_at   DateTime          @default(now())
-  updated_at   DateTime
+  updated_at   DateTime?         @updatedAt
   product_id   String?
   categoria_id String?
   name         opciones_producto @default(main)
   product      productos?        @relation(fields: [product_id], references: [id])
   categoria    categorias?       @relation(fields: [categoria_id], references: [id])
 
-  @@unique([product_id, name], map: "asignacion_imagen")
+  //@@unique([product_id, name], map: "asignacion_imagen")
 }
 
 model price {
   id         String            @id @default(uuid())
   price      Float
   created_at DateTime          @default(now())
-  updated_at DateTime
+  updated_at DateTime          @updatedAt
   product_id String
   name       opciones_producto @default(main)
   product    productos         @relation(fields: [product_id], references: [id])
