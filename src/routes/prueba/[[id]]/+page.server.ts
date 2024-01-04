@@ -57,7 +57,8 @@ export const actions = {
 					file: urlToFIle(element.file),
 					product_id,
 					secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_main.png`,
-					name: `${product_id}_main.png`
+					file_name: `${product_id}_main.png`,
+					name: 'main'
 				};
 			} else {
 				i++;
@@ -65,7 +66,8 @@ export const actions = {
 					file: urlToFIle(element.file),
 					product_id,
 					sucure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_image${i}.png`,
-					name: `${product_id}_image${i}.png`
+					file_name: `${product_id}_image${i}.png`,
+					name: `image${i}`
 				};
 			}
 		});
@@ -75,6 +77,7 @@ export const actions = {
         return {
           product_id,
           secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${element.name}`,
+		  name: element.name
         };
       })
 
@@ -83,11 +86,11 @@ export const actions = {
 
         if(!crear_imagenes) return
 
-		imagenes.forEach(async (element: { file: File; name: string }) => {
+		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {
 				const { data, error } = await grabar.storage
 					.from('products')
-					.upload(element.name, element.file);
+					.upload(element.file_name, element.file);
 				if (data) {
 					console.log('sucess', data);
 				} else {
