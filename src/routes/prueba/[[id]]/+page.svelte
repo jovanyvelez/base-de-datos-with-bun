@@ -146,7 +146,7 @@
 	<article class=" p-4 mx-4">
 		<h2 class="text-xl font-semibold mb-2">Agregar fotos del producto</h2>
 		<h3 class="text-lg mb-2">Agrega una o varias imágenes a tu producto</h3>
-		<div class="max-w-min">
+		<div class="max-w-min my-4">
 			<label for="laImagen">
 				<div class="flex w-1/12">
 					<div class="flex flex-col justify-center items-center max-w-md">
@@ -202,63 +202,85 @@
 			{/if}
 		</div>
 
-		<form method="post" action="?/create">
+		<form method="post" action="?/create" class="sm:mx-20">
 			<input type="hidden" name="send_images" bind:value={$form.send_images}>
-			<input type="hidden" name="id" bind:value={$form.id} />			<h2 class="text-xl font-semibold mb-2">Agregar nombre</h2>
-			<h3 class="text-lg my-4">Agrega un nombre del producto, que lo diferencie de otros</h3>
-			<input
-				type="text"
-				name="name"
-				id="name"
-				bind:value={$form.name}
-				placeholder="Agrega un nombre"
-				class="input input-primary input-bordered w-full m-4"
-			/>
-			<h2 class="text-xl font-semibold mb-2">Agregar marca</h2>
-			<h3 class="text-lg my-4">Agrega la marca del producto, (-Es opcional-)</h3>
-			<input
-				type="text"
-				name="marca"
-				bind:value={$form.marca}
-				placeholder="Aqui va la marca del producto"
-				class="input input-primary input-bordered w-full m-4"
-			/>
-			<h2 class="text-xl font-semibold mb-2">Agregar codigo</h2>
+			<input type="hidden" name="id" bind:value={$form.id} />	
+			<article class="flex flex-col sm:flex-row mt-8 ">
+				<div class="w-full sm:w-3/6  ">
+					<h2 class="text-xl font-semibold">Agregar nombre</h2>
+					<h3 class="text-lg mb-2">Agrega un nombre del producto, que lo diferencie de otros</h3>
+				</div>
+				<input
+					type="text"
+					name="name"
+					id="name"
+					bind:value={$form.name}
+					placeholder="Agrega un nombre"
+					class="input input-primary input-bordered input-xs sm:input-lg w-full sm:w-3/6 sm:ml-2"
+				/>
+			</article>
+			
+			<article class="flex flex-col sm:flex-row mt-8">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold ">Agregar marca</h2>
+					<h3 class="text-lg my-4">Agrega la marca del producto, (-Es opcional-)</h3>
+				</div>
+				<input
+					type="text"
+					name="marca"
+					bind:value={$form.marca}
+					placeholder="Aqui va la marca del producto"
+					class="input input-primary input-bordered  input-xs sm:input-lg w-full sm:w-3/6 sm:ml-2 "
+				/>
+			</article>
 
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">Agrega codigo de interno del producto, (-Es opcional-)</h3>
+			<article class="flex flex-col sm:flex-row items-center mt-8">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold">Agregar codigo</h2>
+					<h3 class="text-lg ">Agrega codigo de interno del producto, (-Es opcional-)</h3>
+				</div>
+
 				<input
 					type="text"
 					name="codigo"
 					bind:value={$form.codigo}
 					placeholder="codigo ?"
-					class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+					class="input input-primary input-bordered w-full  max-w-40 rounded-full mt-4 sm:ml-2"
 				/>
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar codigo EAN</h2>
+			</article>
 
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">Agrega codigo EAN del producto, ( - Es opcional - )</h3>
+			
+			<article class="flex flex-col sm:flex-row items-center mt-8">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold mt-8">Agregar codigo EAN</h2>
+					<h3 class="text-lg ">Agrega codigo EAN del producto, ( - Es opcional - )</h3>
+				</div>
 				<input
 					type="text"
 					name="ean_code"
 					bind:value={$form.ean_code}
 					placeholder="codigo EAN ?"
-					class="input input-primary input-bordered w-full m-4 max-w-40 mx-4 rounded-full"
+					class="input input-primary input-bordered w-full max-w-40 rounded-full mt-4 sm:ml-2"
 				/>
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar descripcion</h2>
-			<h3 class="text-lg my-4">Agrega mayor información de tu producto</h3>
-			<textarea
-				bind:value={$form.description}
-				placeholder="Escribe aqui la descripcion de tu producto"
-				name="description"
-				class="textarea textarea-primary textarea-bordered w-full mx-4"
-			></textarea>
-			<h2 class="text-xl font-semibold my-4">Cantidad disponible</h2>
-			<div class="flex">
-				<h3 class="text-lg my-4">Cantidad de unidades disponibles para la venta</h3>
-				<div class="mx-4 flex flex-col sm:flex-row items-center">
+			</article>
+			<article class="flex flex-col sm:flex-row items-center mt-8">
+				<div class="sm:w-6/12">
+					<h2 class="text-xl font-semibold">Agregar descripcion</h2>
+					<h3 class="text-lg my-4">Agrega mayor información de tu producto</h3>
+				</div>
+				<textarea
+					bind:value={$form.description}
+					placeholder="Escribe aqui la descripcion de tu producto"
+					name="description"
+					class="textarea textarea-primary textarea-bordered sm:ml-2"
+				></textarea>
+			</article>
+			<article class="flex flex-col sm:flex-row items-center mt-8">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold mt-8">Cantidad disponible</h2>
+					<h3 class="text-lg">Cantidad de unidades disponibles para la venta</h3>
+				</div>
+				<div class="flex flex-col sm:flex-row items-center ml-2">
 					<button
 						type="button"
 						on:click={() => ($form.quantity = Math.round($form.quantity - 1) < 0 ? 0 : Math.round($form.quantity - 1))}
@@ -288,41 +310,33 @@
 						></button
 					>
 				</div>
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar precio al público</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price" bind:value={$form.price} class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista1</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price1" bind:value={$form.price1} class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista2</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price2" bind:value={$form.price2}  class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar precio Lista3</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
-				<input type="number" name="price3" bind:value={$form.price3}  class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar descuento</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
-				<input type="number" name="descuento" bind:value={$form.descuento} class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Agregar iva</h2>
-			<div class="flex items-center">
-				<h3 class="text-lg my-4">Agrega el iva en porcentaje</h3>
-				<input type="number" name="tax" bind:value={$form.tax}  class="min-w-16 mx-4 rounded-full" />
-			</div>
-			<h2 class="text-xl font-semibold mb-2">Activacion del producto</h2>
+			</article>
+			<article class="flex flex-col sm:flex-row items-center">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold mt-8">Agregar precio al público</h2>
+					<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
+				</div>
+				<input type="number" name="price" bind:value={$form.price} class="min-w-16 rounded-full ml-2" />
+			</article>
+
+			<article class="flex flex-col sm:flex-row items-center">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold mt-8">Agregar descuento</h2>
+					<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
+				</div>
+				<input type="number" name="descuento" bind:value={$form.descuento} class="min-w-16 rounded-full ml-2" />
+			</article>
+			<article class="flex flex-col items-center sm:flex-row">
+				<div class="w-full sm:w-6/12">
+					<h2 class="text-xl font-semibold mt-8">Agregar iva</h2>
+					<h3 class="text-lg my-4">Agrega el iva en porcentaje</h3>
+				</div>
+				<input type="number" name="tax" bind:value={$form.tax}  class="min-w-16 rounded-full" />
+			</article>
+			<h2 class="text-xl font-semibold mt-8">Activacion del producto</h2>
 			<fieldset>
-				<div class="flex align-center">
-					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2"
+				<div class="flex align-center mt-8">
+					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2 w-6/12"
 						>Deseas activar el producto:</legend
 					>
 					<input
@@ -331,23 +345,23 @@
 						bind:value={$form.active}
 						name="active"
 						checked
-						class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
 					/>
-					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2">SI</label>
+					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2 text-xs sm:text-sm">SI</label>
 
 					<input
 						type="radio"
 						id="activeChoice2"
 						bind:value={$form.active}
 						name="active"
-						class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						class="ml-2 mr-1 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 					/>
-					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
+					<label for="activeChoice2" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-lg">NO</label>
 				</div>
 			</fieldset>
 			<fieldset>
-				<div class="flex align-center">
-					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2"
+				<div class="flex align-center mt-4">
+					<legend class="flex flex-row items-center text-lg gap-2 ml-2 my-2 sm:w-6/12"
 						>Es una referencia nueva?</legend
 					>
 					<input
@@ -356,21 +370,21 @@
 						bind:value={$form.nuevo}
 						name="nuevo"
 						checked
-						class="w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 					/>
-					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2">SI</label>
+					<label for="activeChoice1" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-sm">SI</label>
 
 					<input
 						type="radio"
 						id="activeChoice2"
 						bind:value={$form.nuevo}
 						name="nuevo"
-						class="ml-2 mr-1 w-8 h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 					/>
-					<label for="activeChoice2" class="flex flex-row items-center gap-2">NO</label>
+					<label for="activeChoice2" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-sm">NO</label>
 				</div>
 			</fieldset>
-			<button type="submit" on:click={convert_to_string} class="btn btn-primary">Enviar </button>
+			<button type="submit" on:click={convert_to_string} class="btn btn-primary mt-8 ">Enviar </button>
 		</form>
 	</article>
 </main>

@@ -3,6 +3,13 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
 import { createProductFromAdmin, createProductImages } from '$lib/server/db_queries/query_create.js';
 
+ function numberToString (x:number) {
+	if(x===1) return 'uno';
+	if(x===2) return 'dos';
+	if(x===3) return 'tres';
+	if(x===4) return 'cuatro';
+	if(x===5) return 'cinco';
+}
 const urlToFIle = (url: string) => {
 	const arr = url.split(',');
 	const mime: string | null = arr[0].match(/:(.*?);/)?.[1] || null;
@@ -45,7 +52,7 @@ export const actions = {
 			form.data.nuevo === 'on' ? true : false
 		);
 
-        console.log('product_id',product_id);
+
 		if(!product_id) return
 
 		const temp = JSON.parse(form.data.send_images);
@@ -62,24 +69,26 @@ export const actions = {
 				};
 			} else {
 				i++;
+				const j = numberToString(i);
 				return {
 					file: urlToFIle(element.file),
 					product_id,
-					sucure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_image${i}.png`,
+					secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_image${i}.png`,
 					file_name: `${product_id}_image${i}.png`,
-					name: `image${i}`
+					name: j
 				};
 			}
 		});
-        console.log(imagenes)
+
         
-      const imagrabar = imagenes.map((element: { file: File; name: string }) => {
-        return {
+      const imagrabar = imagenes.map((element: { product_id: string; secure_url: string; name: string }) => {
+		return {
           product_id,
-          secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${element.name}`,
+          secure_url: element.secure_url,
 		  name: element.name
         };
       })
+
 
         const crear_imagenes = await createProductImages(imagrabar);
 
