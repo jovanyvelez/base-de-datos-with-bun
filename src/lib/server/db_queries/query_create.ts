@@ -1,7 +1,7 @@
 import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
 import type { ProductStore } from '$lib/types/Interfaces_or_types';
-import type { usuario } from '@prisma/client';
+import type { opciones_producto, usuario } from '@prisma/client';
 import prisma from '../prisma';
 
 export async function saveOrder(productos: ProductStore[], usuario: usuario) {
@@ -159,4 +159,15 @@ export async function createProductImages(datos: {product_id :string; secure_url
 		console.log('error en la grabacion del registro',error)
 		return false
 	}
+}
+
+export async function createPrice(price:number, product_id:string, name:opciones_producto | undefined = "main"){
+	const precio = await prisma.price.create({
+		data: {
+			price,
+			name,
+			product_id
+		}
+	})
+	return precio
 }

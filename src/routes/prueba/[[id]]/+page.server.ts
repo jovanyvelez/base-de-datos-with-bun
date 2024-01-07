@@ -1,7 +1,7 @@
 import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
 import { superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
-import { createProductFromAdmin, createProductImages } from '$lib/server/db_queries/query_create.js';
+import { createProductFromAdmin, createProductImages, createPrice } from '$lib/server/db_queries/query_create.js';
 
  function numberToString (x:number) {
 	if(x===1) return 'uno';
@@ -95,6 +95,10 @@ export const actions = {
 
 
         if(!crear_imagenes) return
+
+		const precio = await createPrice(form.data.price, product_id, 'main');
+
+		if(!precio) return
 
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {

@@ -3,14 +3,21 @@
 
 	export let product: any;
 
+	 const imageIndexado = product.images.reduce((ac:{name:string,secure_url:string}, el:{name:string,secure_url:string})=> {
+		return {
+			...ac,
+			[el.name]: el
+		}
+	}, {})
+
 
 </script>
 
 <div class="flex flex-col items-center border-2 mb-4 mx-2 text-center w-5/12 sm:w-72 bg-white rounded-xl shadow-lg
 			{product.quantity <= 0?'opacity-50':''}">
 
-	
-	<img src={product.images[0].secure_url} alt="article" class="" />
+	<img src={imageIndexado.main.secure_url} alt="article" class="" />
+	<!-- <img src={product.images[0].secure_url} alt="article" class="" /> -->
 
 	<div>
 		<small><span class="font-bold">code:</span> {product.codigo}</small>
