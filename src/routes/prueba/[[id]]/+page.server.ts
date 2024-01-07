@@ -29,6 +29,7 @@ const urlToFIle = (url: string) => {
 };
 
 export const load = async ({ params }) => {
+	console.log(params.id);
 	const form = await superValidate(crudUserSchema);
 	return { form };
 };
