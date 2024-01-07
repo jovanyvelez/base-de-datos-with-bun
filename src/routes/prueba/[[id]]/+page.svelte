@@ -1,6 +1,5 @@
 <script lang="ts">
-
-	import { superForm } from "sveltekit-superforms/client";
+	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
 	const { form } = superForm(data.form);
@@ -15,8 +14,8 @@
 	$form.price1 = 0;
 	$form.price2 = 0;
 	$form.price3 = 0;
-	$form.active = "on";
-	$form.nuevo = "on";
+	$form.active = 'on';
+	$form.nuevo = 'on';
 
 	let images: { id: number; main: boolean; file: string }[] = [];
 	let new_image_url = '';
@@ -25,7 +24,6 @@
 
 	async function onChange() {
 		const file = input.files ? input.files[0] : null;
-
 
 		if (file) {
 			showImage = true;
@@ -133,11 +131,11 @@
 		images = [...images];
 	}
 	const convert_to_string = async () => {
-		const temp =  images.map( (item) => {
-			return {file:item.file,main:item.main};
-		})
-		$form.send_images = JSON.stringify({files:temp});
-	}
+		const temp = images.map((item) => {
+			return { file: item.file, main: item.main };
+		});
+		$form.send_images = JSON.stringify({ files: temp });
+	};
 </script>
 
 <main class="m-7 bg-white bordered shadow-slate-400 shadow-lg rounded-xl">
@@ -203,10 +201,11 @@
 		</div>
 
 		<form method="post" action="?/create" class="sm:mx-20">
-			<input type="hidden" name="send_images" bind:value={$form.send_images}>
-			<input type="hidden" name="id" bind:value={$form.id} />	
-			<article class="flex flex-col sm:flex-row mt-8 ">
-				<div class="w-full sm:w-3/6  ">
+			<input type="hidden" name="send_images" bind:value={$form.send_images} />
+			<input type="hidden" name="id" bind:value={$form.id} />
+
+			<article class="flex flex-col md:flex-row mt-8">
+				<div class="w-full sm:w-3/6">
 					<h2 class="text-xl font-semibold">Agregar nombre</h2>
 					<h3 class="text-lg mb-2">Agrega un nombre del producto, que lo diferencie de otros</h3>
 				</div>
@@ -216,13 +215,13 @@
 					id="name"
 					bind:value={$form.name}
 					placeholder="Agrega un nombre"
-					class="input input-primary input-bordered input-xs sm:input-lg w-full sm:w-3/6 sm:ml-2"
+					class="input input-primary input-bordered input-md sm:input-lg w-full sm:w-3/6 sm:ml-2"
 				/>
 			</article>
-			
-			<article class="flex flex-col sm:flex-row mt-8">
+
+			<article class="flex flex-col md:flex-row mt-8">
 				<div class="w-full sm:w-6/12">
-					<h2 class="text-xl font-semibold ">Agregar marca</h2>
+					<h2 class="text-xl font-semibold">Agregar marca</h2>
 					<h3 class="text-lg my-4">Agrega la marca del producto, (-Es opcional-)</h3>
 				</div>
 				<input
@@ -230,14 +229,14 @@
 					name="marca"
 					bind:value={$form.marca}
 					placeholder="Aqui va la marca del producto"
-					class="input input-primary input-bordered  input-xs sm:input-lg w-full sm:w-3/6 sm:ml-2 "
+					class="input input-primary input-bordered input-md sm:input-lg w-full sm:w-3/6 sm:ml-2"
 				/>
 			</article>
 
-			<article class="flex flex-col sm:flex-row items-center mt-8">
+			<article class="flex flex-col md:flex-row items-center mt-8">
 				<div class="w-full sm:w-6/12">
 					<h2 class="text-xl font-semibold">Agregar codigo</h2>
-					<h3 class="text-lg ">Agrega codigo de interno del producto, (-Es opcional-)</h3>
+					<h3 class="text-lg my-4">Agrega codigo de interno del producto, (-Es opcional-)</h3>
 				</div>
 
 				<input
@@ -245,15 +244,14 @@
 					name="codigo"
 					bind:value={$form.codigo}
 					placeholder="codigo ?"
-					class="input input-primary input-bordered w-full  max-w-40 rounded-full mt-4 sm:ml-2"
+					class="input input-primary input-bordered w-full max-w-40 rounded-full mt-4 sm:ml-2"
 				/>
 			</article>
 
-			
-			<article class="flex flex-col sm:flex-row items-center mt-8">
+			<article class="flex flex-col md:flex-row items-center mt-8">
 				<div class="w-full sm:w-6/12">
-					<h2 class="text-xl font-semibold mt-8">Agregar codigo EAN</h2>
-					<h3 class="text-lg ">Agrega codigo EAN del producto, ( - Es opcional - )</h3>
+					<h2 class="text-xl font-semibold">Agregar codigo EAN</h2>
+					<h3 class="text-lg">Agrega codigo EAN del producto, ( - Es opcional - )</h3>
 				</div>
 				<input
 					type="text"
@@ -263,7 +261,7 @@
 					class="input input-primary input-bordered w-full max-w-40 rounded-full mt-4 sm:ml-2"
 				/>
 			</article>
-			<article class="flex flex-col sm:flex-row items-center mt-8">
+			<article class="flex flex-col md:flex-row items-center mt-8">
 				<div class="sm:w-6/12">
 					<h2 class="text-xl font-semibold">Agregar descripcion</h2>
 					<h3 class="text-lg my-4">Agrega mayor información de tu producto</h3>
@@ -272,18 +270,20 @@
 					bind:value={$form.description}
 					placeholder="Escribe aqui la descripcion de tu producto"
 					name="description"
-					class="textarea textarea-primary textarea-bordered sm:ml-2"
+					class="textarea textarea-primary textarea-bordered textarea-md sm:textarea-lg w-3/6 sm:ml-2"
 				></textarea>
 			</article>
-			<article class="flex flex-col sm:flex-row items-center mt-8">
+			<article class="flex flex-col md:flex-row items-center mt-8">
 				<div class="w-full sm:w-6/12">
 					<h2 class="text-xl font-semibold mt-8">Cantidad disponible</h2>
 					<h3 class="text-lg">Cantidad de unidades disponibles para la venta</h3>
 				</div>
-				<div class="flex flex-col sm:flex-row items-center ml-2">
+				<div class="flex items-center ml-2">
 					<button
 						type="button"
-						on:click={() => ($form.quantity = Math.round($form.quantity - 1) < 0 ? 0 : Math.round($form.quantity - 1))}
+						on:click={() =>
+							($form.quantity =
+								Math.round($form.quantity - 1) < 0 ? 0 : Math.round($form.quantity - 1))}
 						><svg width="50" height="50" viewBox="0 0 50 50"
 							><path
 								fill="currentColor"
@@ -311,80 +311,94 @@
 					>
 				</div>
 			</article>
-			<article class="flex flex-col sm:flex-row items-center">
+			<article class="flex flex-col md:flex-row items-center">
 				<div class="w-full sm:w-6/12">
 					<h2 class="text-xl font-semibold mt-8">Agregar precio al público</h2>
 					<h3 class="text-lg my-4">incluye el precio de tu producto sin decimales</h3>
 				</div>
-				<input type="number" name="price" bind:value={$form.price} class="min-w-16 rounded-full ml-2" />
+				<input
+					type="number"
+					name="price"
+					bind:value={$form.price}
+					class="min-w-16 rounded-full ml-2"
+				/>
 			</article>
 
-			<article class="flex flex-col sm:flex-row items-center">
+			<article class="flex flex-col md:flex-row items-center">
 				<div class="w-full sm:w-6/12">
 					<h2 class="text-xl font-semibold mt-8">Agregar descuento</h2>
 					<h3 class="text-lg my-4">Agrega el descuento en porcentaje</h3>
 				</div>
-				<input type="number" name="descuento" bind:value={$form.descuento} class="min-w-16 rounded-full ml-2" />
+				<input
+					type="number"
+					name="descuento"
+					bind:value={$form.descuento}
+					class="min-w-16 rounded-full ml-2"
+				/>
 			</article>
 			<article class="flex flex-col items-center sm:flex-row">
 				<div class="w-full sm:w-6/12">
 					<h2 class="text-xl font-semibold mt-8">Agregar iva</h2>
 					<h3 class="text-lg my-4">Agrega el iva en porcentaje</h3>
 				</div>
-				<input type="number" name="tax" bind:value={$form.tax}  class="min-w-16 rounded-full" />
+				<input type="number" name="tax" bind:value={$form.tax} class="min-w-16 rounded-full" />
 			</article>
 			<h2 class="text-xl font-semibold mt-8">Activacion del producto</h2>
 			<fieldset>
-				<div class="flex align-center mt-8">
-					<legend class="flex flex-row items-center text-lg gap-2 mr-2 my-2 w-6/12"
+				<div class="flex align-center flex-col sm:flex-row mt-8">
+					<legend class="flex flex-row items-center text-lg gap-2 my-2 w-6/12"
 						>Deseas activar el producto:</legend
 					>
-					<input
-						type="radio"
-						id="activeChoice1"
-						bind:value={$form.active}
-						name="active"
-						checked
-						class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
-					/>
-					<label for="activeChoice1" class="flex flex-row items-center gap-2 ml-2 mr-2 text-xs sm:text-sm">SI</label>
+					<div class="mx-auto w-6/12">
+						<input
+							type="radio"
+							id="activeChoice1"
+							bind:value={$form.active}
+							name="active"
+							checked
+							class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
+						/>
+						<label for="activeChoice1" class="gap-2 ml-2 mr-2 text-xs sm:text-sm">SI</label>
 
-					<input
-						type="radio"
-						id="activeChoice2"
-						bind:value={$form.active}
-						name="active"
-						class="ml-2 mr-1 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
-					/>
-					<label for="activeChoice2" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-lg">NO</label>
+						<input
+							type="radio"
+							id="activeChoice2"
+							bind:value={$form.active}
+							name="active"
+							class="ml-2 mr-1 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						/>
+						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-lg">NO</label>
+					</div>
 				</div>
 			</fieldset>
 			<fieldset>
-				<div class="flex align-center mt-4">
-					<legend class="flex flex-row items-center text-lg gap-2 ml-2 my-2 sm:w-6/12"
-						>Es una referencia nueva?</legend
-					>
-					<input
-						type="radio"
-						id="activeChoice1"
-						bind:value={$form.nuevo}
-						name="nuevo"
-						checked
-						class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
-					/>
-					<label for="activeChoice1" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-sm">SI</label>
+				<div class="flex align-center flex-col sm:flex-row mt-8">
+					<legend class=" text-lg gap-2 ml-2 my-2 sm:w-6/12">Es una referencia nueva?</legend>
+					<div class="mx-auto w-6/12">
+						<input
+							type="radio"
+							id="activeChoice1"
+							bind:value={$form.nuevo}
+							name="nuevo"
+							checked
+							class="w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						/>
+						<label for="activeChoice1" class="gap-2 mx-2 text-xs sm:text-sm">SI</label>
 
-					<input
-						type="radio"
-						id="activeChoice2"
-						bind:value={$form.nuevo}
-						name="nuevo"
-						class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
-					/>
-					<label for="activeChoice2" class="flex flex-row items-center gap-2 mx-2 text-xs sm:text-sm">NO</label>
+						<input
+							type="radio"
+							id="activeChoice2"
+							bind:value={$form.nuevo}
+							name="nuevo"
+							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+						/>
+						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-sm">NO</label>
+					</div>
 				</div>
 			</fieldset>
-			<button type="submit" on:click={convert_to_string} class="btn btn-primary mt-8 ">Enviar </button>
+			<button type="submit" on:click={convert_to_string} class="btn btn-primary  mt-8"
+				>Enviar
+			</button>
 		</form>
 	</article>
 </main>
