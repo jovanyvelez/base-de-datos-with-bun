@@ -343,10 +343,10 @@
 				</div>
 				<input type="number" name="tax" bind:value={$form.tax} class="min-w-16 rounded-full" />
 			</article>
-			<h2 class="text-xl font-semibold mt-8">Activacion del producto</h2>
+
 			<fieldset>
 				<div class="flex align-center flex-col sm:flex-row mt-8">
-					<legend class="flex flex-row items-center text-lg gap-2 my-2 w-6/12"
+					<legend class="text-lg gap-2 ml-2 my-2 sm:w-6/12"
 						>Deseas activar el producto:</legend
 					>
 					<div class="mx-auto w-6/12">
@@ -356,16 +356,16 @@
 							bind:value={$form.active}
 							name="active"
 							checked
-							class="sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
+							class="w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
 						/>
-						<label for="activeChoice1" class="gap-2 ml-2 mr-2 text-xs sm:text-sm">SI</label>
+						<label for="activeChoice1" class="gap-2 mx-2 text-xs sm:text-sm">SI</label>
 
 						<input
 							type="radio"
 							id="activeChoice2"
 							bind:value={$form.active}
 							name="active"
-							class="ml-2 mr-1 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
 						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-lg">NO</label>
 					</div>
@@ -387,12 +387,12 @@
 
 						<input
 							type="radio"
-							id="activeChoice2"
+							id="activeChoice3"
 							bind:value={$form.nuevo}
 							name="nuevo"
 							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
-						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-sm">NO</label>
+						<label for="activeChoice3" class="gap-2 mx-2 text-xs sm:text-sm">NO</label>
 					</div>
 				</div>
 			</fieldset>
