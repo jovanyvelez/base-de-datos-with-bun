@@ -17,7 +17,8 @@
 			{product.quantity <= 0?'opacity-50':''}">
 
 	<!-- <img src={imageIndexado.main.secure_url} alt="article" class="" /> -->
-	<img src={product.images[0].secure_url} alt="article" class="" />
+	<!-- <img src={product.images[0].secure_url} alt="article" class="" /> -->
+	<img src={product.img} alt="article" class="" />
 
 	<div>
 		<small><span class="font-bold">code:</span> {product.codigo}</small>

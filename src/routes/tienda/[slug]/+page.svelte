@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	import Item from '$lib/components/Item.svelte';
+	import { products } from '$lib/stores/stores';
 
 
 
@@ -76,6 +77,8 @@
 
 
 {/if}
+
+
 
 <style>
 	.pagination a {

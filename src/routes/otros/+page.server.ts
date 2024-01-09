@@ -1,11 +1,12 @@
-import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
+import { productosPorCategoria_usando_sql } from '$lib/server/db_queries/query_select.js';
 import { superValidate } from 'sveltekit-superforms/server';
 
 
 
 export const load = async () => {
-    const form = await superValidate(crudUserSchema);
-    return {form}
+     return {
+         test: await productosPorCategoria_usando_sql("f48358e3-6550-4b46-bd9d-5b93fc41adde")
+     }
 }
 
 export const actions = {

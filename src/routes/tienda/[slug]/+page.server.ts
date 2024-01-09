@@ -32,6 +32,25 @@ export async function load({ params }) {
 		productos =  await productos_por_categoria(query.param, pageSize, query.page);
 	}
 
+	let {products} = productos
+	const {cantidad} = productos
 
-	return { products: productos.products, cantidad: productos.cantidad, query, page: query.page, pages: Math.ceil(productos.cantidad / pageSize)};
+	console.time("generacion de imagenes")
+	products = products.map(producto => {
+		const imageIndexado = producto.images.reduce((ac:{name:string,secure_url:string}, el:{name:string,secure_url:string})=> {
+			return {
+				...ac,
+				[el.name]: el
+			}
+		}, {})
+		return {...producto, img: imageIndexado.main.secure_url}
+
+	})
+
+	console.timeEnd("generacion de imagenes")
+
+	
+
+
+	return { products, cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
 }
