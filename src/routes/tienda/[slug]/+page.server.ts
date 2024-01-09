@@ -35,7 +35,6 @@ export async function load({ params }) {
 	let {products} = productos
 	const {cantidad} = productos
 
-	console.time("generacion de imagenes")
 	products = products.map(producto => {
 		const imageIndexado = producto.images.reduce((ac:{name:string,secure_url:string}, el:{name:string,secure_url:string})=> {
 			return {
@@ -46,11 +45,6 @@ export async function load({ params }) {
 		return {...producto, img: imageIndexado.main.secure_url}
 
 	})
-
-	console.timeEnd("generacion de imagenes")
-
-	
-
 
 	return { products, cantidad, query, page: query.page, pages: Math.ceil(cantidad / pageSize)};
 }
