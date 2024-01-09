@@ -36,7 +36,7 @@ export async function load({ params }) {
 	const {cantidad} = productos
 
 	products = products.map(producto => {
-		const imageIndexado = producto.images.reduce((ac:{name:string,secure_url:string}, el:{name:string,secure_url:string})=> {
+		const imageIndexado = producto.images.reduce((ac, el:{name:string,secure_url:string})=> {
 			return {
 				...ac,
 				[el.name]: el
