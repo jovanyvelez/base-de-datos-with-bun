@@ -155,7 +155,7 @@ export const products_by_name_query = async (
 			},
 			images: {
 				select: {
-					name: true,
+					main: true,
 					secure_url: true
 				}
 			}
@@ -200,7 +200,7 @@ export const products_by_id = async (id: string) => {
 			},
 			images: {
 				select: {
-					name: true,
+					main: true,
 					secure_url: true
 				}
 			}	
@@ -266,7 +266,6 @@ FROM (
         productos.name,
         price.name as price_type,
         price.price,
-        image.name as image_type,
         image.secure_url,
         ROW_NUMBER() OVER (PARTITION BY categorias.id ORDER BY random()) as row_num
     FROM productos
@@ -338,7 +337,7 @@ export async function productos_por_categoria(
 			},
 			images: {
 				select: {
-					name: true,
+					main: true,
 					secure_url: true
 				}
 			}
