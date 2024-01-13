@@ -1,15 +1,13 @@
 import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
 import { superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
-import { createProductFromAdmin, createProductImages, createPrice } from '$lib/server/db_queries/query_create.js';
+import {
+	createProductFromAdmin,
+	createProductImages,
+	createPrice
+} from '$lib/server/db_queries/query_create.js';
+import { product_by_id } from '$lib/server/db_queries/query_select.js';
 
- function numberToString (x:number) {
-	if(x===1) return 'uno';
-	if(x===2) return 'dos';
-	if(x===3) return 'tres';
-	if(x===4) return 'cuatro';
-	if(x===5) return 'cinco';
-}
 const urlToFIle = (url: string) => {
 	const arr = url.split(',');
 	const mime: string | null = arr[0].match(/:(.*?);/)?.[1] || null;
@@ -29,8 +27,25 @@ const urlToFIle = (url: string) => {
 };
 
 export const load = async ({ params }) => {
-	console.log(params.id);
-	const form = await superValidate(crudUserSchema);
+	const { id } = params;
+
+	if (!id) {
+		const form = await superValidate(crudUserSchema);
+		return { form };
+	}
+	const producto = await product_by_id(id);
+	if (!producto) {
+		const form = await superValidate(crudUserSchema);
+		return { form };
+	}
+
+	let { prices, images, ...foundProduct } = producto;
+
+
+	foundProduct = { ...foundProduct, price: prices[0].price, send_images: JSON.stringify(images) };
+
+	const form = await superValidate(foundProduct,crudUserSchema);
+
 	return { form };
 };
 
@@ -38,8 +53,9 @@ export const actions = {
 	create: async ({ request }: { request: Request }) => {
 		const form = await superValidate(request, crudUserSchema);
 		console.log(form.valid);
+		console.log(form);
 		if (!form.valid) return;
-
+		return
 		const product_id = await createProductFromAdmin(
 			form.data.name,
 			form.data.quantity,
@@ -53,8 +69,7 @@ export const actions = {
 			form.data.nuevo === 'on' ? true : false
 		);
 
-
-		if(!product_id) return
+		if (!product_id) return;
 
 		const temp = JSON.parse(form.data.send_images);
 
@@ -66,39 +81,37 @@ export const actions = {
 					product_id,
 					secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_main.png`,
 					file_name: `${product_id}_main.png`,
-					name: 'main'
+					main: true
 				};
 			} else {
 				i++;
-				const j = numberToString(i);
 				return {
 					file: urlToFIle(element.file),
 					product_id,
 					secure_url: `https://rxcvntscktadpgjwroxh.supabase.co/storage/v1/object/public/products/${product_id}_image${i}.png`,
 					file_name: `${product_id}_image${i}.png`,
-					name: j
+					main: false
 				};
 			}
 		});
 
-        
-      const imagrabar = imagenes.map((element: { product_id: string; secure_url: string; name: string }) => {
-		return {
-          product_id,
-          secure_url: element.secure_url,
-		  name: element.name
-        };
-      })
+		const imagrabar = imagenes.map(
+			(element: { product_id: string; secure_url: string; main: boolean }) => {
+				return {
+					product_id,
+					secure_url: element.secure_url,
+					main: element.main
+				};
+			}
+		);
 
+		const crear_imagenes = await createProductImages(imagrabar);
 
-        const crear_imagenes = await createProductImages(imagrabar);
-
-
-        if(!crear_imagenes) return
+		if (!crear_imagenes) return;
 
 		const precio = await createPrice(form.data.price, product_id, 'main');
 
-		if(!precio) return
+		if (!precio) return;
 
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {

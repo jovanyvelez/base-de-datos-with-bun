@@ -31,9 +31,6 @@ export const productSchema = z
 		.trim(),
         nuevo: z.enum(['on','off']),
 		price: z.number().gt(0,"No podemos regalar el producto"),
-		price1: z.number({required_error:'debe ser numerico'}).gte(0),
-		price2: z.number().gte(0),
-		price3: z.number().gte(0),
         descuento: z.number().gte(0).lt(100),
 		quantity: z
 		.number({required_error:'Se requiere cantidad'})

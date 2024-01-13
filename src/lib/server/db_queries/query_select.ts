@@ -177,7 +177,7 @@ export const products_by_name_query = async (
 	return { products, cantidad };
 };
 
-export const products_by_id = async (id: string) => {
+export const product_by_id = async (id: string) => {
 	const product = await prisma.productos.findUnique({
 		where: { id },
 		select: {
@@ -188,7 +188,7 @@ export const products_by_id = async (id: string) => {
 			description: true,
 			ean_code: true,
 			marca: true,
-			new: true,
+			nuevo: true,
 			descuento: true,
 			quantity: true,
 			tax: true,
@@ -200,6 +200,7 @@ export const products_by_id = async (id: string) => {
 			},
 			images: {
 				select: {
+					id:true,
 					main: true,
 					secure_url: true
 				}

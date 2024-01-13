@@ -3,24 +3,31 @@
 
 	export let data;
 	const { form } = superForm(data.form);
+	let images: { id: number; main: boolean; secure_url: string }[] ;
+	if(!$form.id){
+		$form.quantity = 1;
+		$form.tax = 0;
+		$form.descuento = 0;
+		$form.price = 0;
+		$form.active = 'on';
+		$form.nuevo = 'on';
+		images = []
+	}else{
+		images = JSON.parse($form.send_images);
+	}
 
 	const WITH = 300;
 	let primera_imagen = true;
 	let input: HTMLInputElement;
-	$form.quantity = 1;
-	$form.tax = 0;
-	$form.descuento = 0;
-	$form.price = 0;
-	$form.price1 = 0;
-	$form.price2 = 0;
-	$form.price3 = 0;
-	$form.active = 'on';
-	$form.nuevo = 'on';
 
-	let images: { id: number; main: boolean; file: string }[] = [];
+
+	//images = JSON.parse($form.send_images)
+
+
+	
 	let new_image_url = '';
 
-	let showImage = false;
+	let showImage = images.length > 0?true:false;
 
 	async function onChange() {
 		const file = input.files ? input.files[0] : null;
@@ -70,7 +77,7 @@
 					if (!existe)
 						images = [
 							...images,
-							{ file: new_image_url, id: Date.now(), main: primera_imagen ? true : false }
+							{ secure_url: new_image_url, id: Date.now(), main: primera_imagen ? true : false }
 						];
 					primera_imagen = false;
 					canvas.remove();
@@ -113,7 +120,7 @@
 	};
 
 	const buscar_imagen = (imagen: string) => {
-		const temp_image = images.find((item) => item.file == imagen);
+		const temp_image = images.find((item) => item.secure_url == imagen);
 
 		return temp_image ? true : false;
 	};
@@ -130,11 +137,9 @@
 		});
 		images = [...images];
 	}
+
 	const convert_to_string = async () => {
-		const temp = images.map((item) => {
-			return { file: item.file, main: item.main };
-		});
-		$form.send_images = JSON.stringify({ files: temp });
+		$form.send_images = JSON.stringify({ files: images });
 	};
 </script>
 
@@ -176,7 +181,7 @@
 						}`}
 					>
 						<button on:click={(event) => selectDiv(item)}>
-							<img src={item.file} alt="{item.id}}" class="mx-2 rounded-xl" />
+							<img src={item.secure_url} alt="{item.id}}" class="mx-2 rounded-xl" />
 						</button>
 
 						<div
