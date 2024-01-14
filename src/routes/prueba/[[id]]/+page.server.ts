@@ -7,6 +7,7 @@ import {
 	createPrice
 } from '$lib/server/db_queries/query_create.js';
 import { product_by_id } from '$lib/server/db_queries/query_select.js';
+import type { productToModify } from '$lib/types/Interfaces_or_types.js';
 
 const urlToFIle = (url: string) => {
 	const arr = url.split(',');
@@ -39,12 +40,27 @@ export const load = async ({ params }) => {
 		return { form };
 	}
 
-	let { prices, images, ...foundProduct } = producto;
+	console.log(producto)
 
+	const productoAActualizar: productToModify = {
+		"id" : producto.id,
+		"name": producto.name,
+		"active": producto.active ? 'on' : 'off',
+		"codigo": producto.codigo === null? undefined : producto.codigo,
+		"description": producto.description,
+		"ean_code" : producto.ean_code === null? undefined : producto.ean_code,
+		"marca": producto.marca === null? undefined : producto.marca,
+		"nuevo": producto.nuevo ? 'on' : 'off',
+		"descuento": producto.descuento === null? undefined : producto.descuento,
+		"quantity": producto.quantity === null? undefined : producto.quantity,
+		"tax": producto.tax,
+		"price": producto.prices[0].price,
+		"send_images": JSON.stringify(producto.images), //producto.images
+	}
 
-	foundProduct = { ...foundProduct, price: prices[0].price, send_images: JSON.stringify(images) };
+	console.log(productoAActualizar);
 
-	const form = await superValidate(foundProduct,crudUserSchema);
+	const form = await superValidate(productoAActualizar,crudUserSchema);
 
 	return { form };
 };

@@ -3,7 +3,17 @@
 
 	export let data;
 	const { form } = superForm(data.form);
+
+	console.log($form)
+
+	/**
+	 * Se declara el array de imagenes que contendrá el producto
+	*/
 	let images: { id: number; main: boolean; secure_url: string }[] ;
+	/**
+	 * Si no viene un producto desde el servidor, se inicializa el formulario
+	 * con los valores por defecto
+	*/
 	if(!$form.id){
 		$form.quantity = 1;
 		$form.tax = 0;
@@ -13,16 +23,15 @@
 		$form.nuevo = 'on';
 		images = []
 	}else{
-		images = JSON.parse($form.send_images);
+
+		images = JSON.parse($form.send_images); //Imagenes que vienen del servidor
 	}
 
-	const WITH = 300;
+
+	const WITH = 300; //Ancho máximo de las imagenes
+
 	let primera_imagen = true;
 	let input: HTMLInputElement;
-
-
-	//images = JSON.parse($form.send_images)
-
 
 	
 	let new_image_url = '';
@@ -71,7 +80,6 @@
 							context.drawImage(new_image, 0, 0, canvas.width, canvas.height);
 							new_image_url = context.canvas.toDataURL('image/jpeg', 100);
 						}
-						//imagen_to_upload =  urlToFIle(new_image_url)
 					}
 					const existe = buscar_imagen(new_image_url);
 					if (!existe)
@@ -81,7 +89,6 @@
 						];
 					primera_imagen = false;
 					canvas.remove();
-					//const {data, error} = await grabar.storage.from('products').upload(`product_${Date.now()}.png`, imagen_to_upload)
 				};
 				new_image.remove();
 			});

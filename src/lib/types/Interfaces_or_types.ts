@@ -13,6 +13,25 @@
     ,
   }
 
+  export interface productToModify {
+    "id" : string,
+    "name": string,
+    "active": "on" | "off" | undefined,
+    "codigo": string | undefined,
+    "description": string,
+    "ean_code" : string |undefined,
+    "marca": string | undefined,
+    "nuevo": "on" | "off" | undefined,
+    "descuento": number | undefined,
+    "quantity": number | undefined,
+    "tax": number,
+    "price": number,
+    "send_images": string
+    ,
+  }
+
+
+
   export interface ProductStore extends Product{
     qtyBuy: number
   }
