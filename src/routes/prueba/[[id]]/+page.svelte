@@ -4,7 +4,7 @@
 	export let data;
 	const { form } = superForm(data.form);
 
-	console.log($form)
+
 
 	/**
 	 * Se declara el array de imagenes que contendrá el producto
@@ -13,7 +13,10 @@
 	/**
 	 * Si no viene un producto desde el servidor, se inicializa el formulario
 	 * con los valores por defecto
-	*/
+	 */
+	
+	let primera_imagen = true;
+
 	if(!$form.id){
 		$form.quantity = 1;
 		$form.tax = 0;
@@ -22,15 +25,15 @@
 		$form.active = 'on';
 		$form.nuevo = 'on';
 		images = []
+		primera_imagen = true
 	}else{
-
+		primera_imagen = false
 		images = JSON.parse($form.send_images); //Imagenes que vienen del servidor
 	}
 
 
 	const WITH = 300; //Ancho máximo de las imagenes
 
-	let primera_imagen = true;
 	let input: HTMLInputElement;
 
 	

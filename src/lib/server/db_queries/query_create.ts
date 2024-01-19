@@ -148,7 +148,7 @@ export async function createProductFromAdmin ( name:string,
 	return producto.id;
 }
 
-export async function createProductImages(datos: {product_id :string; secure_url:string, main:boolean}[]){
+export async function createProductImages(datos: {product_id :string; secure_url:string, main:boolean, public_id:string}[]){
 	console.log('grabando imagenes', datos)
 	try {
 		await prisma.image.createMany({

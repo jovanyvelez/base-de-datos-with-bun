@@ -202,7 +202,8 @@ export const product_by_id = async (id: string) => {
 				select: {
 					id:true,
 					main: true,
-					secure_url: true
+					secure_url: true,
+					public_id: true
 				}
 			}	
 		}	
