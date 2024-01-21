@@ -11,7 +11,8 @@ import type { productToModify } from '$lib/types/Interfaces_or_types.js';
 import {
 	deleteImageNotInlist,
 	imageUpdateMain,
-	updateProductById
+	updateProductById,
+	updatePriceById
 } from '$lib/server/db_queries/query_update.js';
 
 const urlToFIle = (url: string) => {
@@ -39,7 +40,9 @@ export const load = async ({ params }) => {
 		const form = await superValidate(crudUserSchema);
 		return { form };
 	}
+
 	const producto = await product_by_id(id);
+
 	if (!producto) {
 		const form = await superValidate(crudUserSchema);
 		return { form };
@@ -48,12 +51,12 @@ export const load = async ({ params }) => {
 	const productoAActualizar: productToModify = {
 		id: producto.id,
 		name: producto.name,
-		active: producto.active ? 'on' : 'off',
+		active: producto.active ? "on" : "off",
 		codigo: producto.codigo === null ? undefined : producto.codigo,
 		description: producto.description,
 		ean_code: producto.ean_code === null ? undefined : producto.ean_code,
 		marca: producto.marca === null ? undefined : producto.marca,
-		nuevo: producto.nuevo ? 'on' : 'off',
+		nuevo: producto.nuevo ? "on" : "off",
 		descuento: producto.descuento === null ? undefined : producto.descuento,
 		quantity: producto.quantity === null ? undefined : producto.quantity,
 		tax: producto.tax,
@@ -62,6 +65,7 @@ export const load = async ({ params }) => {
 	};
 
 	const form = await superValidate(productoAActualizar, crudUserSchema);
+
 
 	return { form };
 };
@@ -97,6 +101,7 @@ export const actions = {
 		 */
 
 		if (form.data.id) {
+
 			producto = await product_by_id(form.data.id);
 
 			if (!producto) return; //El producto debería existir
@@ -154,6 +159,7 @@ export const actions = {
 			}
 
 			if (imagesToDelete.length > 0) {
+				
 				/**
 				 * Borro las imagenes en la base de datos que no estén en la interfaz de usuario
 				 */
@@ -165,7 +171,7 @@ export const actions = {
 					if (index[imagesToDelete[i]]) {
 						const { data, error } = await grabar.storage
 							.from('products')
-							.remove([index[imagesToDelete[i]].public_id]);
+							.remove([ `${index[imagesToDelete[i]].public_id}` ]);
 					}
 				}
 			}
@@ -187,7 +193,13 @@ export const actions = {
 				form.data.active === 'on' ? true : false,
 				form.data.nuevo === 'on' ? true : false
 			);
+
+			//const precio = await updatePriceById(product_id, form.data.price, "main");
 			
+			
+			/**
+			 * Regreso en caso de que no haya imagenes nuevas
+			 */
 			if(imagenes.length < 1) return
 
 		} else {
@@ -211,7 +223,7 @@ export const actions = {
 		if (imagenes.length > 0) {
 			tempImages = [...imagenes];
 		} else {
-			const precio = await createPrice(form.data.price, product_id, 'main');
+			const precio = await createPrice(form.data.price, product_id, true);
 			if (!precio) return;
 		}
 
@@ -238,15 +250,12 @@ export const actions = {
 				};
 			}
 		);
-
 	
-
 
 		const crear_imagenes = await createProductImages(imagrabar);
 
 		if (!crear_imagenes) return;
 
-		console.log(imagenes)
 
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {
@@ -254,7 +263,8 @@ export const actions = {
 					.from('products')
 					.upload(element.file_name, element.file);
 				if (data) {
-					console.log('sucess', data);
+					console.log('sucess', data.fullPath);
+
 				} else {
 					console.log('fail', error, data);
 				}

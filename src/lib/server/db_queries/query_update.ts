@@ -64,3 +64,17 @@ export async function deleteImageNotInlist(eliminarNoExistentes:string[]) {
 		console.log('no se pudo borrar las imagenes', error)
 	}
 }
+
+export async function updatePriceById (product_id:string, price:number) {
+	
+	const data = await prisma.price.update({
+		where: {
+			product_id,
+
+		},
+		data: {
+			price,
+
+		}
+	})
+}

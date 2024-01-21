@@ -14,8 +14,14 @@
 	 * Si no viene un producto desde el servidor, se inicializa el formulario
 	 * con los valores por defecto
 	 */
+
+	let nuevo: string;
+	let active: string;
 	
 	let primera_imagen = true;
+
+	console.log($form.nuevo)
+	console.log($form.active)
 
 	if(!$form.id){
 		$form.quantity = 1;
@@ -368,7 +374,8 @@
 						<input
 							type="radio"
 							id="activeChoice1"
-							bind:value={$form.active}
+							value="on"
+							bind:group={$form.active}
 							name="active"
 							checked
 							class="w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none ml-2"
@@ -378,7 +385,8 @@
 						<input
 							type="radio"
 							id="activeChoice2"
-							bind:value={$form.active}
+							value="off"
+							bind:group={$form.active}
 							name="active"
 							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
@@ -393,7 +401,8 @@
 						<input
 							type="radio"
 							id="activeChoice1"
-							bind:value={$form.nuevo}
+							value="on"
+							bind:group={$form.nuevo}
 							name="nuevo"
 							checked
 							class="w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
@@ -403,7 +412,8 @@
 						<input
 							type="radio"
 							id="activeChoice3"
-							bind:value={$form.nuevo}
+							value="off"
+							bind:group={$form.nuevo}
 							name="nuevo"
 							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
