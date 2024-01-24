@@ -362,6 +362,8 @@ export async function productos_por_categoria(
 	return { products, cantidad };
 }
 
+
+
 export async function mainCategories() {
 	const categorias: { id: string; name: string }[] = await prisma.categorias.findMany({
 		where: {
@@ -396,4 +398,51 @@ export async function categoriasPrincipales() {
 	console.log('categorias ppales');
 	prisma.$disconnect();
 	return productos;
+}
+
+
+export async function productos_ordenados_por_nombre(
+	pageSize: number,
+	queryPage: number
+) {
+	const products = await prisma.productos.findMany({
+
+		select: {
+			id: true,
+			name: true,
+			quantity: true,
+			description: true,
+			codigo: true,
+			ean_code: true,
+			tax: true,
+			prices: {
+				select: {
+					name: true,
+					price: true
+				}
+			},
+			images: {
+				select: {
+					main: true,
+					secure_url: true
+				}
+			}
+		},
+		take: pageSize, // LIMIT
+		skip: pageSize * (queryPage - 1), // OFFSET
+	});
+
+	const cantidad = await prisma.productos.count({
+		where: {
+			categorias: {
+				some: {
+					category: {
+						id: categoriaConsulta
+					}
+				}
+			}
+		}
+	});
+
+	return { products, cantidad };
 }

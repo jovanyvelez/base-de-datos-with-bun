@@ -16,7 +16,7 @@
         <Clientes_Icon slot="icon"/> Clientes
     </ItemMenuAdmin>
 
-    <ItemMenuAdmin ref="/administrator/productos">
+    <ItemMenuAdmin ref="/administrator/mainProducts">
         <Productos_Icon slot="icon"/> Productos
     </ItemMenuAdmin>
 

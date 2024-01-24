@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ButonQuantity from '$lib/components/ButonQuantity.svelte';
+	import Image from '$lib/components/utils/Image.svelte';
 
 	export let product: any;
 
@@ -18,7 +19,8 @@
 
 	<!-- <img src={imageIndexado.main.secure_url} alt="article" class="" /> -->
 	<!-- <img src={product.images[0].secure_url} alt="article" class="" /> -->
-	<img src={product.img} alt="article" class="" />
+	<!--img loading="lazy" src={product.img} alt="article" class="" /-->
+	<Image src={product.img} />
 
 	<div>
 		<small><span class="font-bold">code:</span> {product.codigo}</small>
