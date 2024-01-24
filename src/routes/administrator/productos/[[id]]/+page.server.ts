@@ -12,8 +12,8 @@ import {
 	deleteImageNotInlist,
 	imageUpdateMain,
 	updateProductById,
-	updatePriceById
 } from '$lib/server/db_queries/query_update.js';
+import { deleteProductPrice } from '$lib/server/db_queries/query_delete.js';
 
 const urlToFIle = (url: string) => {
 	const arr = url.split(',');
@@ -106,6 +106,9 @@ export const actions = {
 
 			if (!producto) return; //El producto debería existir
 
+			/**
+			 * capturo id del producto a modificar
+			 */
 			product_id = producto.id;
 
 			/**
@@ -126,10 +129,11 @@ export const actions = {
 			 */
 
 			const indexImages: { [key: string]: { id: string; main: boolean } } = tempImages.reduce(
-				(acc, curr) => {
+				(acc:{ [key: string]: { id: string; main: boolean; public_id: string } }, 
+					curr: { id: string; main: boolean; public_id: string }) => {
 					return { ...acc, [curr.id]: { id: curr.id, main: curr.main } };
 				},
-				{}
+				{} 
 			);
 
 			/**
@@ -169,14 +173,16 @@ export const actions = {
 				 */
 				for (let i = 0; i < imagesToDelete.length; i++) {
 					if (index[imagesToDelete[i]]) {
-						const { data, error } = await grabar.storage
+						const { error } = await grabar.storage
 							.from('products')
 							.remove([ `${index[imagesToDelete[i]].public_id}` ]);
+						if(error) return
 					}
 				}
 			}
-	
-	
+
+			await deleteProductPrice(producto.prices[0].id);
+			await createPrice(form.data.price, product_id, 'main');
 			/**
 			 * Actualizo el producto en la base de datos con los valores que vienen de la interfaz de usuario
 			 */
@@ -194,7 +200,7 @@ export const actions = {
 				form.data.nuevo === 'on' ? true : false
 			);
 
-			//const precio = await updatePriceById(product_id, form.data.price, "main");
+
 			
 			
 			/**
@@ -223,7 +229,7 @@ export const actions = {
 		if (imagenes.length > 0) {
 			tempImages = [...imagenes];
 		} else {
-			const precio = await createPrice(form.data.price, product_id, true);
+			const precio = await createPrice(form.data.price, product_id, 'main');
 			if (!precio) return;
 		}
 
@@ -256,14 +262,14 @@ export const actions = {
 
 		if (!crear_imagenes) return;
 
-
+		//grabamos imagenes en el servidor de imagenes
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {
 				const { data, error } = await grabar.storage
 					.from('products')
 					.upload(element.file_name, element.file);
 				if (data) {
-					console.log('sucess', data.fullPath);
+					console.log('sucess');
 
 				} else {
 					console.log('fail', error, data);

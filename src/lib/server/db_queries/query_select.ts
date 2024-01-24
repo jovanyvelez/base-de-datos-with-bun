@@ -194,6 +194,7 @@ export const product_by_id = async (id: string) => {
 			tax: true,
 			prices: {
 				select: {
+					id:true,
 					name: true,
 					price: true
 				}

@@ -390,7 +390,7 @@
 							name="active"
 							class="ml-2 mr-1 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
-						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-lg">NO</label>
+						<label for="activeChoice2" class="gap-2 mx-2 text-xs sm:text-sm">NO</label>
 					</div>
 				</div>
 			</fieldset>
@@ -405,7 +405,7 @@
 							bind:group={$form.nuevo}
 							name="nuevo"
 							checked
-							class="w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
+							class="ml-2 w-4 sm:w-8 h-4 sm:h-8 bg-[#E0E0E0] rounded-full cursor-pointer not-checked:appearance-none"
 						/>
 						<label for="activeChoice1" class="gap-2 mx-2 text-xs sm:text-sm">SI</label>
 

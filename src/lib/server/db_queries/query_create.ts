@@ -165,8 +165,8 @@ export async function createPrice(price:number, product_id:string, name:opciones
 	const precio = await prisma.price.create({
 		data: {
 			price,
+			product_id,
 			name,
-			product_id
 		}
 	})
 	return precio
