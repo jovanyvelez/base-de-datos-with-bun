@@ -20,8 +20,6 @@
 	
 	let primera_imagen = true;
 
-	console.log($form.nuevo)
-	console.log($form.active)
 
 	if(!$form.id){
 		$form.quantity = 1;

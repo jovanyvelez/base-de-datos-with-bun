@@ -1,5 +1,5 @@
 {#if loaded}
-	<img {src} alt="Document" />
+	<img {src} alt="Document" class="w-full" />
 {:else if failed}
 	<img src="https://icon-library.com/images/not-found-icon/not-found-icon-20.jpg" alt="Not Found" />
 {:else if loading}

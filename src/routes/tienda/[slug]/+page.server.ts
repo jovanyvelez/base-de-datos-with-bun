@@ -14,7 +14,6 @@ export async function load({ params }) {
 	try {
 		query = JSON.parse(params.slug);
 	} catch (error) {
-		console.log('error parseando el json');
 		query = { param: '', page: 1, por_categoria: false };
 	}
 

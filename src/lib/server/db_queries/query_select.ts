@@ -401,7 +401,7 @@ export async function categoriasPrincipales() {
 }
 
 
-export async function productos_ordenados_por_nombre(
+export async function todosLosProductos(
 	pageSize: number,
 	queryPage: number
 ) {
@@ -432,17 +432,7 @@ export async function productos_ordenados_por_nombre(
 		skip: pageSize * (queryPage - 1), // OFFSET
 	});
 
-	const cantidad = await prisma.productos.count({
-		where: {
-			categorias: {
-				some: {
-					category: {
-						id: categoriaConsulta
-					}
-				}
-			}
-		}
-	});
+	const cantidad = await prisma.productos.count();
 
 	return { products, cantidad };
 }

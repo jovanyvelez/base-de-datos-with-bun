@@ -74,6 +74,7 @@ export const actions = {
 	create: async ({ request }: { request: Request }) => {
 		const form = await superValidate(request, crudUserSchema);
 
+		//console.log(form)
 		if (!form.valid) return;
 
 		const imagesFromFront = JSON.parse(form.data.send_images);
@@ -102,6 +103,7 @@ export const actions = {
 
 		if (form.data.id) {
 
+
 			producto = await product_by_id(form.data.id);
 
 			if (!producto) return; //El producto debería existir
@@ -110,6 +112,8 @@ export const actions = {
 			 * capturo id del producto a modificar
 			 */
 			product_id = producto.id;
+
+
 
 			/**
 			 * Traigo las imagenes de la base de datos
@@ -179,8 +183,8 @@ export const actions = {
 						if(error) return
 					}
 				}
-			}
-
+			}console.log("aquí vamos")
+			
 			await deleteProductPrice(producto.prices[0].id);
 			await createPrice(form.data.price, product_id, 'main');
 			/**
