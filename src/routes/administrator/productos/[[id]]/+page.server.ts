@@ -267,6 +267,7 @@ export const actions = {
 		console.log('se van a guardar las imagenes');
 
 		//grabamos imagenes en el servidor de imagenes
+		console.time('grabar imagenes');
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
 			try {
 				const { data, error } = await grabar.storage
@@ -283,6 +284,7 @@ export const actions = {
 				console.log('no se pudo subir');
 			}
 		});
+		console.timeEnd('grabar imagenes');
 		console.log('actualizo');
 		return message(form, 'El producto se actualizo con exito');
 	}
