@@ -84,7 +84,7 @@ export const actions = {
 		/**
 		 * El producto debe tener al menos una imagen
 		 */
-		if (tempImages.length < 1) return;
+		if (tempImages.length < 1) return message(form, 'El producto debe tener al menos una imagen');;
 
 		let producto;
 		let product_id: string;
@@ -106,7 +106,7 @@ export const actions = {
 
 			producto = await product_by_id(form.data.id);
 
-			if (!producto) return; //El producto debería existir
+			if (!producto) return message(form, 'El producto no existe'); //El producto debería existir
 
 			/**
 			 * capturo id del producto a modificar
@@ -210,7 +210,7 @@ export const actions = {
 			/**
 			 * Regreso en caso de que no haya imagenes nuevas
 			 */
-			if(imagenes.length < 1) return ;
+			if(imagenes.length < 1) message(form, 'Debe haber al menos una imagen'); ;
 
 		} else {
 			product_id = await createProductFromAdmin(
@@ -228,13 +228,13 @@ export const actions = {
 
 		}
 
-		if (!product_id) return;
+		if (!product_id) return message(form, 'No se pudo crear el producto');
 
 		if (imagenes.length > 0) {
 			tempImages = [...imagenes];
 		} else {
 			const precio = await createPrice(form.data.price, product_id, 'main');
-			if (!precio) return;
+			if (!precio) return message(form, 'No se pudo crear el precio');
 		}
 
 		let i = 0;
@@ -264,7 +264,7 @@ export const actions = {
 
 		const crear_imagenes = await createProductImages(imagrabar);
 
-		if (!crear_imagenes) return;
+		if (!crear_imagenes) return message(form, 'No se pudieron crear las imagenes');
 
 		//grabamos imagenes en el servidor de imagenes
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {

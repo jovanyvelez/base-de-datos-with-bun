@@ -162,9 +162,7 @@
 	};
 </script>
 
-{#if $message}
-	<h3>{$message}</h3>
-{/if}
+
 <main class="m-7 bg-white bordered shadow-slate-400 shadow-lg rounded-xl">
 
 	{#if $form.id}
@@ -438,6 +436,9 @@
 			</button>
 		</form>
 	</article>
+	{#if $message}
+		<h3 class="text-center text-red-700 text-3xl">{$message}</h3>
+	{/if}
 </main>
 
 <style>
