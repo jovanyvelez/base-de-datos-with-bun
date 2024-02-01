@@ -3,9 +3,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
-	const { form, message, errors, enhance } = superForm(data.form, {
-		resetForm: false
-	});
+	const { form, errors, message, enhance } = superForm(data.form,{resetForm: true});
 
 
 

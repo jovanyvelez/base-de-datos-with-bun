@@ -204,8 +204,6 @@ export const actions = {
 				form.data.nuevo === 'on' ? true : false
 			);
 
-
-			
 			
 			/**
 			 * Regreso en caso de que no haya imagenes nuevas
@@ -265,6 +263,8 @@ export const actions = {
 		const crear_imagenes = await createProductImages(imagrabar);
 
 		if (!crear_imagenes) return message(form, 'No se pudieron crear las imagenes');
+		
+		console.log('se van a guardar las imagenes');
 
 		//grabamos imagenes en el servidor de imagenes
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
@@ -283,6 +283,7 @@ export const actions = {
 				console.log('no se pudo subir');
 			}
 		});
+		console.log('actualizo');
 		return message(form, 'El producto se actualizo con exito');
 	}
 };
