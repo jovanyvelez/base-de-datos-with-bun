@@ -436,3 +436,34 @@ export async function todosLosProductos(
 
 	return { products, cantidad };
 }
+
+export async function allCategories() {
+	const categories = await prisma.categorias.findMany({
+		select: {
+			id: true,
+			name: true,
+			description: true,
+			parent_id: true,
+			hijos: true,
+			imagenes: true
+		}
+	});
+	return categories;
+}		
+
+export async function categoriaById(id: string) {
+	const categoria = await prisma.categorias.findUnique({
+		where: {
+			id
+		},
+		select: {
+			id: true,
+			name: true,
+			description: true,
+			parent_id: true,
+			hijos: true,
+			imagenes: true
+		}	
+	});
+	return categoria;
+}

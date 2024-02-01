@@ -1,8 +1,11 @@
 <script lang="ts">
+
 	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
-	const { form } = superForm(data.form);
+	const { form, message, errors, enhance } = superForm(data.form, {
+		resetForm: false
+	});
 
 
 
@@ -32,8 +35,10 @@
 		primera_imagen = true
 	}else{
 		primera_imagen = false
+		console.log(JSON.parse($form.send_images))
 		images = JSON.parse($form.send_images); //Imagenes que vienen del servidor
 	}
+	
 
 
 	const WITH = 300; //Ancho máximo de las imagenes
@@ -157,8 +162,16 @@
 	};
 </script>
 
+{#if $message}
+	<h3>{$message}</h3>
+{/if}
 <main class="m-7 bg-white bordered shadow-slate-400 shadow-lg rounded-xl">
-	<h1 class="text-3xl font-semibold p-4">Agregar un producto</h1>
+
+	{#if $form.id}
+		<h1 class="text-3xl font-semibold p-4">Modificacion de producto</h1>
+	{:else}
+		<h1 class="text-3xl font-semibold p-4">Agregar un producto</h1>
+	{/if}
 
 	<article class=" p-4 mx-4">
 		<h2 class="text-xl font-semibold mb-2">Agregar fotos del producto</h2>
@@ -219,7 +232,7 @@
 			{/if}
 		</div>
 
-		<form method="post" action="?/create" class="sm:mx-20">
+		<form method="post" action="?/create" class="sm:mx-20" use:enhance>
 			<input type="hidden" name="send_images" bind:value={$form.send_images} />
 			<input type="hidden" name="id" bind:value={$form.id} />
 
@@ -236,6 +249,7 @@
 					placeholder="Agrega un nombre"
 					class="input input-primary input-bordered input-md sm:input-lg w-full sm:w-3/6 sm:ml-2"
 				/>
+				{#if $errors.name}<small class="text-error">{$errors.name}</small> {/if}
 			</article>
 
 			<article class="flex flex-col md:flex-row mt-8">

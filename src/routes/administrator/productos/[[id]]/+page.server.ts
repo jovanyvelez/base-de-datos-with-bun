@@ -1,5 +1,5 @@
 import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
-import { superValidate } from 'sveltekit-superforms/server';
+import { message, superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
 import {
 	createProductFromAdmin,
@@ -75,7 +75,7 @@ export const actions = {
 		const form = await superValidate(request, crudUserSchema);
 
 		//console.log(form)
-		if (!form.valid) return;
+		if (!form.valid) return {form};
 
 		const imagesFromFront = JSON.parse(form.data.send_images);
 
@@ -183,7 +183,7 @@ export const actions = {
 						if(error) return
 					}
 				}
-			}console.log("aquí vamos")
+			}
 			
 			await deleteProductPrice(producto.prices[0].id);
 			await createPrice(form.data.price, product_id, 'main');
@@ -210,7 +210,7 @@ export const actions = {
 			/**
 			 * Regreso en caso de que no haya imagenes nuevas
 			 */
-			if(imagenes.length < 1) return
+			if(imagenes.length < 1) return ;
 
 		} else {
 			product_id = await createProductFromAdmin(
@@ -283,6 +283,6 @@ export const actions = {
 				console.log('no se pudo subir');
 			}
 		});
-		return;
+		return message(form, 'El producto se actualizo con exito');
 	}
 };

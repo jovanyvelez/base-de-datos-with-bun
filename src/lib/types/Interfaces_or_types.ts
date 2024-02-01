@@ -30,6 +30,15 @@
     ,
   }
 
+  export interface categoryToModify {
+    "id" : string,
+    "name": string,
+    "description": string | undefined,
+    "parent_id" : string | undefined,
+    "send_images": string
+  }
+
+
 
 
   export interface ProductStore extends Product{

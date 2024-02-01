@@ -20,7 +20,7 @@
         <Productos_Icon slot="icon"/> Productos
     </ItemMenuAdmin>
 
-    <ItemMenuAdmin ref="/administrator">
+    <ItemMenuAdmin ref="/administrator/mainCategories">
         <Categorias_Icon slot="icon"/> Categorias
     </ItemMenuAdmin>
 
