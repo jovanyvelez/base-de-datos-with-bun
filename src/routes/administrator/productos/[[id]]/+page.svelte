@@ -3,7 +3,9 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
-	const { form, errors, message, enhance } = superForm(data.form,{resetForm: true});
+	const { form, errors } = superForm(data.form, {
+		resetForm: false
+	});
 
 
 
@@ -228,7 +230,7 @@
 			{/if}
 		</div>
 
-		<form method="post" action="?/create" class="sm:mx-20" use:enhance>
+		<form method="post" action="?/create" class="sm:mx-20">
 			<input type="hidden" name="send_images" bind:value={$form.send_images} />
 			<input type="hidden" name="id" bind:value={$form.id} />
 
@@ -434,9 +436,7 @@
 			</button>
 		</form>
 	</article>
-	{#if $message}
-		<h3 class="text-center text-red-700 text-3xl">{$message}</h3>
-	{/if}
+
 </main>
 
 <style>

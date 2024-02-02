@@ -1,6 +1,7 @@
 import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
-import { message, superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
+//import {uploadImage} from '$lib/server/cloudinary.js';
 import {
 	createProductFromAdmin,
 	createProductImages,
@@ -84,7 +85,7 @@ export const actions = {
 		/**
 		 * El producto debe tener al menos una imagen
 		 */
-		if (tempImages.length < 1) return message(form, 'El producto debe tener al menos una imagen');;
+		if (tempImages.length < 1) return { form };
 
 		let producto;
 		let product_id: string;
@@ -106,7 +107,7 @@ export const actions = {
 
 			producto = await product_by_id(form.data.id);
 
-			if (!producto) return message(form, 'El producto no existe'); //El producto debería existir
+			if (!producto) return {form}; //El producto debería existir
 
 			/**
 			 * capturo id del producto a modificar
@@ -185,8 +186,14 @@ export const actions = {
 				}
 			}
 			
+
 			await deleteProductPrice(producto.prices[0].id);
-			await createPrice(form.data.price, product_id, 'main');
+			console.log('borrado')
+			try {
+				await createPrice(form.data.price, product_id, 'main');
+			} catch (error) {
+				console.log('No se pudo crear el precio');
+			}
 			/**
 			 * Actualizo el producto en la base de datos con los valores que vienen de la interfaz de usuario
 			 */
@@ -208,7 +215,7 @@ export const actions = {
 			/**
 			 * Regreso en caso de que no haya imagenes nuevas
 			 */
-			if(imagenes.length < 1) message(form, 'Debe haber al menos una imagen'); ;
+			if(imagenes.length < 1) return {form};
 
 		} else {
 			product_id = await createProductFromAdmin(
@@ -226,13 +233,13 @@ export const actions = {
 
 		}
 
-		if (!product_id) return message(form, 'No se pudo crear el producto');
+		if (!product_id) return {form};
 
 		if (imagenes.length > 0) {
 			tempImages = [...imagenes];
 		} else {
 			const precio = await createPrice(form.data.price, product_id, 'main');
-			if (!precio) return message(form, 'No se pudo crear el precio');
+			if (!precio) return {form};
 		}
 
 		let i = 0;
@@ -262,13 +269,14 @@ export const actions = {
 
 		const crear_imagenes = await createProductImages(imagrabar);
 
-		if (!crear_imagenes) return message(form, 'No se pudieron crear las imagenes');
+		if (!crear_imagenes) return {form};
 		
 		console.log('se van a guardar las imagenes');
 
 		//grabamos imagenes en el servidor de imagenes
 		console.time('grabar imagenes');
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
+			console.log(element.file_name);
 			try {
 				const { data, error } = await grabar.storage
 					.from('products')
@@ -286,6 +294,6 @@ export const actions = {
 		});
 		console.timeEnd('grabar imagenes');
 		console.log('actualizo');
-		return message(form, 'El producto se actualizo con exito');
+		return {form}
 	}
 };
