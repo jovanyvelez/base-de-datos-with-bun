@@ -234,12 +234,3 @@ enum estado_orden {
   cancelada
 }
 
-
-
-// model categorias1 {
-//   id         String       @id @default(uuid())
-//   name       String
-//   parent_id  String?
-//   papa       categorias1?  @relation("hijoapadre", fields: [parent_id], references: [id])
-//   hijos      categorias1[] @relation("hijoapadre")
-// }

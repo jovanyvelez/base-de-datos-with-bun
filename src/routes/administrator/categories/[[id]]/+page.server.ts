@@ -2,8 +2,8 @@ import { crudCategoriaSchema } from '$lib/types/zodSchemas/categoriesSchema.js';
 
 import {superValidate } from 'sveltekit-superforms/server';
 
-import { categoryToModify } from '$lib/types/Interfaces_or_types.js';
-import { categoriaById } from '$lib/server/db_queries/query_select.js';
+import type{ categoryToModify } from '$lib/types/Interfaces_or_types.js';
+import { allCategories, categoriaById } from '$lib/server/db_queries/query_select.js';
 
 
 export const load = async ({ params }) => {
@@ -11,7 +11,8 @@ export const load = async ({ params }) => {
 
 	if (!id) {
 		const form = await superValidate(crudCategoriaSchema);
-		return { form };
+		const categorias = await allCategories();
+		return { form, categorias };
 	}
 
 	const categoria = await categoriaById(id);
@@ -34,4 +35,16 @@ export const load = async ({ params }) => {
 
 	return { form };
 };
+
+export const actions = {
+	create: async ({ request }: { request: Request }) => {
+		const form = await superValidate(request, crudCategoriaSchema);
+		const imagesFromFront = JSON.parse(form.data.send_images);
+		//const tempImages = imagesFromFront.files.slice();
+		//if (tempImages.length < 1) return { form };
+		//console.log(imagesFromFront);
+		if (!form.valid) return  {form} ;
+		return {form};
+	}
+}
 

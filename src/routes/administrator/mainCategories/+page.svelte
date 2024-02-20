@@ -19,4 +19,4 @@
 	{/each}
 </article>
 
-<pre>{JSON.stringify(categories,null,2)}</pre>
+<pre>{JSON.stringify(categories, null, 2)}</pre>

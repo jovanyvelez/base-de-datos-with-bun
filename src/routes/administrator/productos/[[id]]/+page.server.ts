@@ -188,7 +188,7 @@ export const actions = {
 			
 
 			await deleteProductPrice(producto.prices[0].id);
-			console.log('borrado')
+
 			try {
 				await createPrice(form.data.price, product_id, 'main');
 			} catch (error) {
@@ -270,13 +270,11 @@ export const actions = {
 		const crear_imagenes = await createProductImages(imagrabar);
 
 		if (!crear_imagenes) return {form};
-		
-		console.log('se van a guardar las imagenes');
 
 		//grabamos imagenes en el servidor de imagenes
-		console.time('grabar imagenes');
+
 		imagenes.forEach(async (element: { file: File; file_name: string }) => {
-			console.log(element.file_name);
+		
 			try {
 				const { data, error } = await grabar.storage
 					.from('products')
@@ -292,7 +290,6 @@ export const actions = {
 				console.log('no se pudo subir');
 			}
 		});
-		console.timeEnd('grabar imagenes');
 		console.log('actualizo');
 		return {form}
 	}

@@ -17,7 +17,8 @@
 	
   <div class="flex justify-between items-center text-blue-800 font-extrabold md:w-auto w-screen">
     <span class="text-xs sm:text-xl md:text-2xl font-[Poppins]">
-        <img class="inline h-12" src="https://res.cloudinary.com/dqlbbx7ud/image/upload/v1695397092/tienda/Logo_rbmsi8.svg" alt="Logo">
+		Ecommerce
+        <!--img class="inline h-12" src="https://res.cloudinary.com/dqlbbx7ud/image/upload/v1695397092/tienda/Logo_rbmsi8.svg" alt="Logo"-->
     </span>
 
 </div>

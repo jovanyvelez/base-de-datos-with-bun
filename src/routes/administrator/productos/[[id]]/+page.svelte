@@ -35,7 +35,6 @@
 		primera_imagen = true
 	}else{
 		primera_imagen = false
-		console.log(JSON.parse($form.send_images))
 		images = JSON.parse($form.send_images); //Imagenes que vienen del servidor
 	}
 	

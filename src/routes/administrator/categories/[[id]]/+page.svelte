@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
-	const { form, message, errors, enhance } = superForm(data.form, {
+	const { categorias } = data;
+	const { form, errors } = superForm(data.form, {
 		resetForm: false
 	});
 
@@ -15,9 +17,13 @@
 		secure_url: ''
 	};
 
-	if ($form.id) {
-		image = JSON.parse($form.send_images); //Imagenes que vienen del servidor
+	let showImage = image.id !== 0 ? true : false;
+
+	if ($form.send_images) {
+		image = JSON.parse($form.send_images).files;
+		showImage = image.id !== 0 ? true : false;
 	}
+
 
 	const WITH = 300; //Ancho máximo de las imagenes
 
@@ -25,7 +31,7 @@
 
 	let new_image_url = '';
 
-	let showImage = image.id !== 0 ? true : false;
+
 
 	async function onChange() {
 		const file = input.files ? input.files[0] : null;
@@ -82,6 +88,12 @@
 		}
 		showImage = false;
 	}
+	const convert_to_string = async () => {
+		$form.send_images = JSON.stringify({ files: image });
+	};
+
+
+
 </script>
 
 <main class="m-7 bg-white bordered shadow-slate-400 shadow-lg rounded-xl">
@@ -117,12 +129,67 @@
 		/>
 		<div class="flex justify-center items-center p-2 flex-wrap">
 			{#if showImage}
-				<img src={image.secure_url} alt="{image.id}}" class="mx-2 rounded-xl" />
+
+				{#if !image}
+					<p>No hay imagen a mostrar</p>
+				{:else}
+					<img src={image.secure_url} alt="{image.id}}" class="mx-2 rounded-xl" />
+				{/if}
+					
+
 			{/if}
 		</div>
 	</article>
 
-	<pre>
-	{JSON.stringify($form, null, 2)}
-</pre>
+	<form method="post" action="?/create" class="sm:mx-20">
+		<input type="hidden" name="parent_id" bind:value={$form.parent_id} />
+		<input type="hidden" name="send_images" bind:value={$form.send_images} />
+		<input type="hidden" name="id" bind:value={$form.id} />
+
+		<article class="flex flex-col md:flex-row mt-8">
+			<div class="w-full sm:w-3/6">
+				<h2 class="text-xl font-semibold">Agregar nombre</h2>
+				<h3 class="text-lg mb-2">Agrega un nombre de categoria, que la diferencie de otras</h3>
+			</div>
+			<input
+				type="text"
+				name="name"
+				id="name"
+				bind:value={$form.name}
+				placeholder="Agrega un nombre"
+				class="input input-primary input-bordered input-md sm:input-lg w-full sm:w-3/6 sm:ml-2"
+			/>
+			{#if $errors.name}<small class="text-error">{$errors.name}</small>
+			{/if}
+		</article>
+
+		<article class="flex flex-col md:flex-row items-center mt-8">
+			<div class="sm:w-6/12">
+				<h2 class="text-xl font-semibold">Agregar descripcion</h2>
+				<h3 class="text-lg my-4">Agrega mayor información de la categoria</h3>
+			</div>
+			<textarea
+				bind:value={$form.description}
+				placeholder="Escribe aqui la descripcion de tu producto"
+				name="description"
+				class="textarea textarea-primary textarea-bordered textarea-md sm:textarea-lg w-3/6 sm:ml-2"
+			></textarea>
+		</article>
+		
+		<button type="submit" on:click={convert_to_string} class="btn btn-primary mt-8">Enviar </button>
+	</form>
+	<div class="flex justify-center items-center p-2 flex-wrap">
+		{#each categorias as categoria (categoria.id)}
+			<div class="flex flex-col border-2 border-sky-500 m-3 p-5 rounded-2xl">
+				<button on:click={() => $form.parent_id = categoria.id}>
+					<p>{categoria.name}</p>
+					{#each categoria.tree as branch (branch.id)}
+						<small>{branch.name}</small>
+					{/each}
+				</button>
+			</div>
+		{/each}
+	</div>
+
 </main>
+<small>{JSON.stringify(image, null, 2)}</small>

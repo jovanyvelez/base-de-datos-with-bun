@@ -1,8 +1,6 @@
 import prisma from '../prisma';
 import type { Product, NewItem, OriginalItem } from '$lib/types/Interfaces_or_types';
 
-
-
 /**
  * Busca un usuario de acuerdo a email en tabla user
  * @param {string} email
@@ -194,23 +192,23 @@ export const product_by_id = async (id: string) => {
 			tax: true,
 			prices: {
 				select: {
-					id:true,
+					id: true,
 					name: true,
 					price: true
 				}
 			},
 			images: {
 				select: {
-					id:true,
+					id: true,
 					main: true,
 					secure_url: true,
 					public_id: true
 				}
-			}	
-		}	
+			}
+		}
 	});
 	return product;
-}
+};
 
 export async function productosPorCategoria_usando_sql(
 	categoriaConsulta: string,
@@ -362,8 +360,6 @@ export async function productos_por_categoria(
 	return { products, cantidad };
 }
 
-
-
 export async function mainCategories() {
 	const categorias: { id: string; name: string }[] = await prisma.categorias.findMany({
 		where: {
@@ -400,13 +396,8 @@ export async function categoriasPrincipales() {
 	return productos;
 }
 
-
-export async function todosLosProductos(
-	pageSize: number,
-	queryPage: number
-) {
+export async function todosLosProductos(pageSize: number, queryPage: number) {
 	const products = await prisma.productos.findMany({
-
 		select: {
 			id: true,
 			name: true,
@@ -429,7 +420,7 @@ export async function todosLosProductos(
 			}
 		},
 		take: pageSize, // LIMIT
-		skip: pageSize * (queryPage - 1), // OFFSET
+		skip: pageSize * (queryPage - 1) // OFFSET
 	});
 
 	const cantidad = await prisma.productos.count();
@@ -448,8 +439,33 @@ export async function allCategories() {
 			imagenes: true
 		}
 	});
-	return categories;
-}		
+	const newCategories = Promise.all(
+		categories.map(async (category) => {
+			const tmp = await tree(category.id);
+			return {
+				...category,
+				tree: tmp
+			};
+		})
+	)
+
+	//console.log(await newCategories);
+	return newCategories;
+}
+
+export async function tree(category:string) {
+	
+	const tmp: {id:string;nam:string}[] = await prisma.$queryRaw`
+	WITH RECURSIVE Ancestros AS (
+      SELECT id, parent_id, name FROM categorias WHERE id = ${category}
+      UNION
+      SELECT c.id, c.parent_id, c.name FROM categorias c
+      JOIN Ancestros a ON c.id = a.parent_id
+    )
+    SELECT id, name FROM Ancestros`;
+	const result = tmp.reverse();
+	return result;
+}
 
 export async function categoriaById(id: string) {
 	const categoria = await prisma.categorias.findUnique({
@@ -463,7 +479,7 @@ export async function categoriaById(id: string) {
 			parent_id: true,
 			hijos: true,
 			imagenes: true
-		}	
+		}
 	});
 	return categoria;
 }
