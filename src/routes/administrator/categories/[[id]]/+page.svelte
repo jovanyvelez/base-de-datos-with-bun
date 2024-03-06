@@ -1,27 +1,29 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { superForm } from 'sveltekit-superforms/client';
 
+	import { superForm } from 'sveltekit-superforms/client';
 	export let data;
-	const { categorias } = data;
+	
 	const { form, errors } = superForm(data.form, {
 		resetForm: false
 	});
+	
 
 	/**
 	 * Se declara el array de imagenes que contendrá el producto
-	 */
+	*/
+
 	let image: { id: number; main: boolean; secure_url: string } = {
 		id: 0,
 		main: false,
 		secure_url: ''
 	};
 
-	let showImage = image.id !== 0 ? true : false;
+	let showImage = image.id  ? true : false;
 
-	if ($form.send_images) {
-		image = JSON.parse($form.send_images).files;
-		showImage = image.id !== 0 ? true : false;
+	if ($form.send_images ) {
+		image = JSON.parse($form.send_images);
+		console.log(image);
+		showImage = true;
 	}
 
 
@@ -35,7 +37,6 @@
 
 	async function onChange() {
 		const file = input.files ? input.files[0] : null;
-
 		if (file) {
 			showImage = true;
 			const reader = new FileReader();
@@ -92,8 +93,6 @@
 		$form.send_images = JSON.stringify({ files: image });
 	};
 
-
-
 </script>
 
 <main class="m-7 bg-white bordered shadow-slate-400 shadow-lg rounded-xl">
@@ -103,8 +102,10 @@
 		<h1 class="text-3xl font-semibold p-4">Agregar una categoria</h1>
 	{/if}
 	<article class=" p-4 mx-4">
+
 		<h2 class="text-xl font-semibold mb-2">Agregar foto de la categoria</h2>
 		<h3 class="text-lg mb-2">Solo una imagen por categoria</h3>
+
 		<div class="max-w-min my-4">
 			<label for="laImagen">
 				<div class="flex w-1/12">
@@ -119,6 +120,7 @@
 				</div>
 			</label>
 		</div>
+
 		<input
 			id="laImagen"
 			class="hidden"
@@ -127,18 +129,17 @@
 			type="file"
 			accept=".jpg, .jpeg, .png .svg"
 		/>
+
 		<div class="flex justify-center items-center p-2 flex-wrap">
 			{#if showImage}
-
 				{#if !image}
 					<p>No hay imagen a mostrar</p>
 				{:else}
 					<img src={image.secure_url} alt="{image.id}}" class="mx-2 rounded-xl" />
-				{/if}
-					
-
+				{/if}					
 			{/if}
 		</div>
+
 	</article>
 
 	<form method="post" action="?/create" class="sm:mx-20">
@@ -170,7 +171,7 @@
 			</div>
 			<textarea
 				bind:value={$form.description}
-				placeholder="Escribe aqui la descripcion de tu producto"
+				placeholder="Escribe aqui la descripcion de la categoria"
 				name="description"
 				class="textarea textarea-primary textarea-bordered textarea-md sm:textarea-lg w-3/6 sm:ml-2"
 			></textarea>
@@ -178,7 +179,7 @@
 		
 		<button type="submit" on:click={convert_to_string} class="btn btn-primary mt-8">Enviar </button>
 	</form>
-	<div class="flex justify-center items-center p-2 flex-wrap">
+	<!--div class="flex justify-center items-center p-2 flex-wrap">
 		{#each categorias as categoria (categoria.id)}
 			<div class="flex flex-col border-2 border-sky-500 m-3 p-5 rounded-2xl">
 				<button on:click={() => $form.parent_id = categoria.id}>
@@ -189,7 +190,7 @@
 				</button>
 			</div>
 		{/each}
-	</div>
+	</div-->
 
 </main>
 <small>{JSON.stringify(image, null, 2)}</small>

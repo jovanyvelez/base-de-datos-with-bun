@@ -78,3 +78,22 @@ export async function updatePriceById (product_id:string, price:number) {
 		}
 	})
 }
+
+export async function updateCategoryById(
+	id: string,
+	name: string,
+	description: string
+
+) {
+	const categoria = await prisma.categorias.update({
+        where: {
+            id
+        },
+        data: {
+			name,
+			description,
+		}
+	});
+
+	return categoria.id;
+}

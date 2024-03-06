@@ -161,6 +161,19 @@ export async function createProductImages(datos: {product_id :string; secure_url
 	}
 }
 
+export async function createCategoryImages(datos: {categoria_id :string; secure_url:string, main:boolean, public_id:string}){
+	console.log('grabando imagenes', datos)
+	try {
+		await prisma.image.create({
+			data: datos
+		})
+		return true
+	} catch (error) {
+		console.log('error en la grabacion del registro',error)
+		return false
+	}
+}
+
 export async function createPrice(price:number, product_id:string, name:opciones_producto | undefined = "main"){
 	const precio = await prisma.price.create({
 		data: {

@@ -1,7 +1,7 @@
-import {allCategories} from '$lib/server/db_queries/query_select';
+import {rootCategories} from '$lib/server/db_queries/query_select';
 
 export const load =  async()=>{
-    const categories = await allCategories();
+    const categories = await rootCategories();
     return {
         categories
     }

@@ -436,7 +436,7 @@ export async function allCategories() {
 			description: true,
 			parent_id: true,
 			hijos: true,
-			imagenes: true
+			imagen: true
 		}
 	});
 	const newCategories = Promise.all(
@@ -452,6 +452,35 @@ export async function allCategories() {
 	//console.log(await newCategories);
 	return newCategories;
 }
+
+export async function rootCategories() {
+	const categories = await prisma.categorias.findMany({
+		where:{
+			parent_id: null
+		},
+		select: {
+			id: true,
+			name: true,
+			description: true,
+			parent_id: true,
+			hijos: true,
+			imagen: true
+		}
+	});
+	const newCategories = Promise.all(
+		categories.map(async (category) => {
+			const tmp = await tree(category.id);
+			return {
+				...category,
+				tree: tmp
+			};
+		})
+	)
+
+	//console.log(await newCategories);
+	return newCategories;
+}
+
 
 export async function tree(category:string) {
 	
@@ -478,8 +507,9 @@ export async function categoriaById(id: string) {
 			description: true,
 			parent_id: true,
 			hijos: true,
-			imagenes: true
+			imagen: true
 		}
 	});
+	console.log(categoria)
 	return categoria;
 }

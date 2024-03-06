@@ -13,18 +13,18 @@ datasource db {
 //Aquí va todo lo relacionado con categorias, productos, imagenes y precios
 
 model categorias {
-  id         String       @id @default(uuid())
-  name       String
+  id          String       @id @default(uuid())
+  name        String
   description String?
-  parent_id  String?
-  created_at DateTime     @default(now())
-  updated_at DateTime
-  papa       categorias?  @relation("hijoapadre", fields: [parent_id], references: [id])
-  hijos      categorias[] @relation("hijoapadre")
+  parent_id   String?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime
+  papa        categorias?  @relation("hijoapadre", fields: [parent_id], references: [id])
+  hijos       categorias[] @relation("hijoapadre")
 
   //Productos e imagenes
   productos productos_categorias[]
-  imagenes  image[]
+  imagen    image?
 
   // Tabla uno a muchos  
   hijo  categoriasclosure[] @relation("hijos")
@@ -45,7 +45,7 @@ model categoriasclosure {
 
 model productos {
   id           String                 @id @default(uuid())
-  name         String                 
+  name         String
   active       Boolean?               @default(true)
   codigo       String?                @unique
   description  String                 @default("Sin descripción")
@@ -70,6 +70,7 @@ model productos_categorias {
   category_id String
   product     productos  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category    categorias @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
   @@id([product_id, category_id])
 }
 
@@ -106,16 +107,16 @@ model detalle_orden {
 }
 
 model image {
-  id           String            @id @default(uuid())
+  id           String      @id @default(uuid())
   public_id    String?
   secure_url   String
-  created_at   DateTime          @default(now())
-  updated_at   DateTime?         @updatedAt
+  created_at   DateTime    @default(now())
+  updated_at   DateTime?   @updatedAt
   product_id   String?
-  categoria_id String?
-  main         Boolean           @default(false)
-  product      productos?        @relation(fields: [product_id], references: [id])
-  categoria    categorias?       @relation(fields: [categoria_id], references: [id])
+  categoria_id String?     @unique //para categorias
+  main         Boolean     @default(false)
+  product      productos?  @relation(fields: [product_id], references: [id])
+  categoria    categorias? @relation(fields: [categoria_id], references: [id])
 }
 
 model price {
@@ -233,4 +234,3 @@ enum estado_orden {
   despachada
   cancelada
 }
-

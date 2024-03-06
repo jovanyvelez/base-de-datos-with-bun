@@ -1,6 +1,7 @@
 import { crudUserSchema } from '$lib/types/zodSchemas/productSchema.js';
 import { superValidate } from 'sveltekit-superforms/server';
 import { grabar } from '$lib/supabaseClient';
+import { urlToFIle } from '$lib/server/utils/files.js';
 //import {uploadImage} from '$lib/server/cloudinary.js';
 import {
 	createProductFromAdmin,
@@ -15,24 +16,6 @@ import {
 	updateProductById,
 } from '$lib/server/db_queries/query_update.js';
 import { deleteProductPrice } from '$lib/server/db_queries/query_delete.js';
-
-const urlToFIle = (url: string) => {
-	const arr = url.split(',');
-	const mime: string | null = arr[0].match(/:(.*?);/)?.[1] || null;
-
-	const data = arr[1];
-	const dataStr = atob(data);
-	let n = dataStr.length;
-	const dataArr = new Uint8Array(n);
-	while (n--) {
-		dataArr[n] = dataStr.charCodeAt(n);
-	}
-
-	//let file = new File([dataArr], 'File.jpg', {type: mime})
-	const file = new File([dataArr], 'File.jpg', { type: mime as string | undefined });
-
-	return file;
-};
 
 export const load = async ({ params }) => {
 	const { id } = params;
