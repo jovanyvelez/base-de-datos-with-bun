@@ -1,6 +1,6 @@
 import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { type Actions, type Action, fail } from '@sveltejs/kit';
 import { creatUserFromWeb } from '$lib/server/db_queries/query_create.js';
 import { superValidate, message } from 'sveltekit-superforms/server';
